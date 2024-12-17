@@ -1,0 +1,38 @@
+@import "/app/global.scss";
+
+.scrolltop {
+  position: fixed;
+  z-index: 20;
+  bottom: 1rem;
+  right: 2rem;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  &.show {
+    bottom: 2.5rem;
+    opacity: 1;
+  }
+  border-radius: 50%;
+  width: 45px;
+  background-color: white;
+  cursor: pointer;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  box-shadow: 0 9px 25px 0 rgba(132, 128, 177, 0.28);
+  color: $dark-green;
+
+  .CircularProgressbar .CircularProgressbar-path {
+    -webkit-transition: stroke-dashoffset 0.1s ease 0s;
+    transition: stroke-dashoffset 0.1s ease 0s;
+  }
+  .CircularProgressbar-trail {
+    stroke: transparent !important;
+  }
+  .CircularProgressbar-path {
+    stroke: $dark-green !important;
+  }
+  .CircularProgressbar-background {
+    fill: white !important;
+  }
+}

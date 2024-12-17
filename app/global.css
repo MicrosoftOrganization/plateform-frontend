@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 box-border p-0;
+  }
+
+  html {
+    @apply font-sans antialiased;
+  }
+
+  body {
+    @apply max-w-full overflow-x-hidden bg-[#f9fafb];
+  }
+  .login-background {
+    @apply flex h-screen items-center justify-center overflow-hidden bg-[#f9fafb] bg-cover bg-center bg-no-repeat;
+  }
+  .blob {
+    @apply absolute h-[250px] w-[250px] opacity-60 blur-[25px];
+    animation: blobAnimation 20s infinite;
+  }
+  .blob1 {
+    @apply left-[2%] top-[5%] duration-1000;
+  }
+
+  .blob2 {
+    @apply bottom-[20%] top-[30%] duration-1000;
+  }
+
+  .blob3 {
+    @apply bottom-[20%] left-[15%] duration-1000;
+  }
+  @media (max-width: 768px) {
+    .blob {
+      @apply h-[100px] w-[100px];
+    }
+  }
+
+  @media (max-width: 480px) {
+    .blob {
+      @apply h-[100px] w-[100px];
+    }
+  }
+
+  @keyframes blobAnimation {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(50px, 50px) scale(1.4);
+    } 
+  }
+}
