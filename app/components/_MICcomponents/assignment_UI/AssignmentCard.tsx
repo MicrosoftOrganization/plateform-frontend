@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { useDisclosure, Button } from '@nextui-org/react'
 import AssignmentModal from '@/mic-component/assignment_UI/AssignmentModal'
-
+import dayjs from 'dayjs'
 // Component: AssignmentCardForMember
 interface AssignmentCardProps {
   assignment: {
@@ -36,7 +36,7 @@ export default function AssignmentCard({ assignment }: AssignmentCardProps) {
       <div className='flex items-center'>
         <div>
           <h5 className='font-extrabold'>{assignment.Title}</h5>
-          <h6 className='text-sm text-gray-500'>{assignment.DueDate}</h6>
+          <h6 className='text-sm text-gray-500'>{dayjs(assignment.DueDate).format('DD/MM/YYYY HH:mm')}</h6>
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { isAuthenticated, getUserRole } from '@/utils/Auth'
 
 const protectedRoutes = {
-  member: ['/member/assignments', '/member/sessions'],
+  member: ['/member','/member/assignments', '/member/sessions'],
   instructor: [
     '/instructor/assignments',
     '/instructor/sessions',
@@ -31,7 +31,7 @@ export default async function middleware(req: NextRequest) {
 
   // Redirect authenticated users away from the login page
   if (isAuth && pathname === '/') {
-    return NextResponse.redirect(new URL(`/${userRole}`, req.nextUrl.origin))
+    return NextResponse.redirect(new URL(`/${userRole}/assignments`, req.nextUrl.origin))
   }
 
   // Redirect unauthorized users to the "Unauthorized" page
@@ -52,9 +52,7 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/unauthorized', req.nextUrl.origin))
     }
   }
-  //  else if (Object.values(protectedRoutes).flat().includes(pathname)) {
-  //   return NextResponse.redirect(new URL('/login', req.nextUrl.origin))
-  // }
+  
 
   return NextResponse.next()
 }

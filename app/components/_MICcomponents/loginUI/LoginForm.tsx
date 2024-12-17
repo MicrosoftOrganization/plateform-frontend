@@ -59,7 +59,7 @@ export default function LoginForm() {
       }
       // console.log('updatedUser', updatedUser)
       if (updatedUser.role === 'member') {
-        router.push('/member/assignments')
+        router.push('/member')
       } else if (updatedUser.role === 'instructor') {
         router.push('/instructor/assignments')
       } else {

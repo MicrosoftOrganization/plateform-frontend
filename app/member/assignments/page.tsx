@@ -42,11 +42,7 @@ const Page = () => {
     <div className='container mx-auto mt-32'>
       <div className='grid grid-cols-4 gap-4 px-10'>
         <div className='col-span-3'>
-          <div>
-            <Typography variant='h5' className='mb-4 text-center font-mono'>
-              Assignments
-            </Typography>
-          </div>
+       
 
           {currentAssignments.length > 0 ? (
             currentAssignments.map(assignment => (
@@ -73,12 +69,7 @@ const Page = () => {
           )}
         </div>
         <div className='col-span-1'>
-          <Button
-            onClick={() => router.push(`/Member/sessions?id_dep=${id_dep}`)}
-            className='m-3 rounded-md bg-gradient-to-r from-secondary to-primary text-white'
-          >
-            GO TO SESSIONS
-          </Button>
+          
           <Accordion />
           <PaginationComponent
             currentPage={currentPage}

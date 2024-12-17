@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
-
 import DepartmentCard from '@/mic-component/departmentCard/DepartmentCard'
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 import { ENDPOINTS } from '@/store/constants/api'
 import axiosInstance from '@/axiosInstance*'
+import { Button } from '@mui/material'
 
 interface Department {
   _id: string
@@ -15,33 +15,30 @@ interface Department {
   imgUrl: string
 }
 const departmentImages = {
-  'Basic Web': './images/departments/basic-web.png',
-  'Advanced Web': './images/departments/advanced-web.png',
-  'Intermediate Web': './images/departments/intermediate-web.png',
-  AI: './images/departments/ml.png'
+  'Basic Web': '@public/images/departments/basic-web.png',
+  'Advanced Web': '@public/images/departments/advanced-web.png',
+  'Intermediate Web': '@public/images/departments/intermediate-web.png',
+  'AI': '@public/images/departments/ai.png',
 }
-// console.log(departmentImages['Basic Web'])
 
 export default function Dashboard() {
   const router = useRouter()
   const [departments, setDepartments] = useState<Department[]>([])
   const departmentIds = useAuthStore(state => state.user?.DepartmentIds || [])
-  // console.log('DepartmentIds:', departmentIds)
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await axiosInstance.get(
-          ENDPOINTS.GET_DEPARTMENTS_NAMES_IDS
-        )
-        setDepartments(response.data.departments)
-      } catch (error) {
-        console.error('Department fetching failed:', error)
-      }
+  const fetchDepartments = async () => {
+    try {
+      const response = await axiosInstance.get(
+        ENDPOINTS.GET_DEPARTMENTS_NAMES_IDS
+      )
+      setDepartments(response.data.departments)
+    } catch (error) {
+      console.error('Department fetching failed:', error)
     }
-
+  }
+  useEffect(() => {
     fetchDepartments()
-  }, [])
+  }, [departments])
 
   return (
     <div>
@@ -56,7 +53,7 @@ export default function Dashboard() {
             <button
               key={department._id}
               onClick={() =>
-                router.push(`/Member/assignments?id_dep=${department._id}`)
+                router.push(`/member/assignments?id_dep=${department._id}`)
               }
             >
               <DepartmentCard
@@ -64,6 +61,12 @@ export default function Dashboard() {
                 name={department.DepartmentName}
                 imageUrl={departmentImages[department.DepartmentName]}
               />
+              <Button
+                onClick={() => router.push(`/member/sessions?id_dep=${department._id}`)}
+              className='m-3 rounded-md bg-gradient-to-r from-secondary to-primary text-white'
+            >
+            GO TO SESSIONS
+          </Button>
             </button>
           ))}
       </div>
