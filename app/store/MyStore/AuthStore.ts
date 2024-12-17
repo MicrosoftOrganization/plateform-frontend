@@ -63,10 +63,13 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         try {
           const response = await axiosInstance.post(ENDPOINTS.LOGOUT)
-
-          set({ user: null, isAuthenticated: false }) // Réinitialiser l'état lors de la déconnexion
+          if (response.status === 200) {
+            toast.success('Logout successful')
+            set({ user: null, isAuthenticated: false }) // Réinitialiser l'état lors de la déconnexion
+          }
         } catch (error) {
           console.error('Logout failed:', error)
+          toast.error('Logout failed')
         }
       }
     }),

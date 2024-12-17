@@ -19,6 +19,7 @@ import UpdateAssignmentModal from '@/mic-component/Instructor_UI/AssignmentUpdat
 import DeleteAssignmentModal from '@/mic-component/Instructor_UI/AssignmentDeleteModalForInstructor/AssignmentDeleteModalForInstructor'
 import AssignmentModal from '@/mic-component/Instructor_UI/AssignmentModalForInstructor/AssignmentModalForInstructor'
 import { toast } from 'react-hot-toast'
+import dayjs from 'dayjs'
 
 const Page = () => {
   const router = useRouter()
@@ -219,7 +220,7 @@ const Page = () => {
           isOpen={openAssignmentModal}
           onOpenChange={setOpenAssignmentModal}
           instructor={selectedAssignment.Instructor}
-          date={selectedAssignment.DueDate}
+          date={dayjs(selectedAssignment.DueDate).format('DD/MM/YYYY HH:mm')} 
           content={selectedAssignment.Description}
           resources={selectedAssignment.Resources}
           imageUrl={selectedAssignment.ImageUrl}

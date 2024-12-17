@@ -14,6 +14,10 @@ import { toast } from 'react-hot-toast'
 import ResponseSearch from '@/mic-component/assignment_UI/ResponseSearch'
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 import { useResponseStore } from '@/store/MyStore/ResponseStore'
+import { z} from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import dayjs from 'dayjs'
 
 export default function AssignmentModal({
   isOpen,
@@ -31,6 +35,14 @@ export default function AssignmentModal({
   const user = useAuthStore(state => state.user)
   const [User_Id] = useState(user.id)
   const [Assignment_Id] = useState(assignmentId)
+  
+
+  const responseSchema = z.object({
+    responseContent: z.string().url('Response content must be a valid URL').nonempty('Response content cannot be empty')
+  })
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(responseSchema)
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +55,7 @@ export default function AssignmentModal({
     fetchData()
   }, [fetchResponses, User_Id])
 
-  const handleAddResponse = async () => {
+  const onSubmit = async () => {
     if (responseContent) {
       try {
         await addResponse(responseContent, User_Id, Assignment_Id)
@@ -82,7 +94,7 @@ export default function AssignmentModal({
                   <h5 className='text-start text-lg font-extrabold'>
                     {instructor}
                   </h5>
-                  <h6 className='text-sm text-gray-500'>{date}</h6>
+                  <h6 className='text-sm text-gray-500'>{dayjs(date).format("DD/MM/YYYY HH:mm")}</h6>
                   <p className='ms-8 mt-2 w-full text-sm text-gray-700 md:text-base'>
                     {breakText(content).map((line, idx) => (
                       <span key={idx}>
@@ -98,32 +110,33 @@ export default function AssignmentModal({
                 </div>
 
                 <div className='flex w-full items-center gap-3 px-3'>
-                  {/* <Image
-                    src={'/images/Member/MemberBackground.png'}
-                    alt='Person'
-                    className='m-0 h-12 w-12 self-center rounded-full'
-                    width={48}
-                    height={48}
-                  /> */}
-                  <Input
-                    value={responseContent}
-                    onChange={e => setResponseContent(e.target.value)}
-                    placeholder={placeholder}
-                    className='max-w-3/4 mt-2 rounded-lg border border-solid border-gray-400 md:w-full'
-                    fullWidth
-                  />
-                  <Button
-                    color='primary'
-                    variant='light'
-                    className='mt-2 px-1 py-3 md:w-auto'
-                    onClick={handleAddResponse}
-                  >
-                    <Send size={24} />
-                  </Button>
+            
+                 <form onSubmit={handleSubmit(onSubmit)} className='flex w-full items-center gap-3'>
+                    <Input
+                      value={responseContent}
+                      onChange={e => setResponseContent(e.target.value)}
+                      placeholder={placeholder}
+                      className='w-full mt-2 rounded-lg border border-solid border-gray-400 md:w-full'
+                      fullWidth
+                      {...register('responseContent')}
+                    />
+                    <Button
+                      color='primary'
+                      variant='light'
+                      className='mt-2 px-4 py-2 md:w-auto'
+                      type='submit'
+                    >
+                      <Send size={24} />
+                    </Button>
+                  </form>
                 </div>
               </div>
             </ModalBody>
-            <ModalFooter className='flex justify-start'></ModalFooter>
+            <ModalFooter className='flex flex-col items-start'>
+              {errors.responseContent && (
+                <p className='text-sm text-red-700 pl-5'>{String(errors.responseContent.message)}</p>
+              )}
+            </ModalFooter>
           </>
         )}
       </ModalContent>
