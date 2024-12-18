@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/mic-component*": ["./app/components/_MICcomponents*"],
+      "@/store*": ["./app/store*"],
+      "@/axiosInstance*": ["./app/axiosInstance.ts"],
+      "@/app*": ["./app*"],
+      "@/ui*": ["./components/ui*"],
+      "@/hooks*": ["./hooks*"],
+      "@/lib*": ["./lib*"],
+      "@/styles*": ["./styles*"],
+      "@/utils*": ["./utils*"],
+      "@/public*": ["./public*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/ui/date-picker.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
