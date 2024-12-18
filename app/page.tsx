@@ -8,7 +8,7 @@ export default function Login() {
     <main className='login-background w-screen' >
       <div className='m-4 flex h-auto w-full items-center justify-center rounded-2xl border border-primary bg-gradient-to-r from-secondary to-primary shadow-2xl md:m-20 md:h-[40rem] md:w-2/3'>
         <div className='relative grid h-full w-full grid-cols-1 items-center justify-center py-10 md:grid-cols-2'>
-          <svg
+          {/* <svg
             className='blob blob1 hidden md:block'
             viewBox='0 0 200 200'
             xmlns='http://www.w3.org/2000/svg'
@@ -40,7 +40,7 @@ export default function Login() {
               d='M58.7,-44.3C67.3,-35.9,59.6,-12,54.1,12.4C48.5,36.8,45.1,61.7,33.1,66.7C21.1,71.7,0.5,56.8,-21.4,45.7C-43.2,34.7,-66.3,27.6,-69,15.8C-71.7,4,-54,-12.5,-39.1,-22.3C-24.2,-32.1,-12.1,-35.2,6.5,-40.4C25,-45.5,50,-52.7,58.7,-44.3Z'
               transform='translate(100 100)'
             />
-          </svg>
+          </svg> */}
           <div className='z-10 flex hidden text-white md:block'>
             <div className='logo absolute left-4 top-4'>
               <Image src={Logo} alt='Logo' width={100} height={100} />

@@ -63,6 +63,7 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         try {
           const response = await axiosInstance.post(ENDPOINTS.LOGOUT)
+          document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname // Clear the token cookie
           if (response.status === 200) {
             toast.success('Logout successful')
             set({ user: null, isAuthenticated: false }) // Réinitialiser l'état lors de la déconnexion

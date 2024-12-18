@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
           <ToasterProvider />
         </NextUIProvider>
         {/* <ScrollTop /> */}
-        <Analytics />
+        {/* <Analytics /> */}
       </body>
     </html>
   )

@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { useDisclosure, Button } from '@nextui-org/react'
 import { FiEdit, FiTrash } from 'react-icons/fi'
 import { useAssignmentStore } from '@/store/MyStore/AssignmentsStore'
-import { Alert, Snackbar } from '@mui/material'
 import UpdateAssignmentModal from '@/mic-component/Instructor_UI/AssignmentUpdateModalForInstructor/AssignmentUpdateModalForInstructor'
 import DeleteAssignmentModal from '@/mic-component/Instructor_UI/AssignmentDeleteModalForInstructor/AssignmentDeleteModalForInstructor'
 import { useRouter } from 'next/navigation'
@@ -95,7 +94,7 @@ export default function AssignmentCardForInstructor({
           <Button
             onClick={() =>
               router.push(
-                `/Instructor/responses?assignmentId=${assignment._id}`
+                `/instructor/responses?assignmentId=${assignment._id}`
               )
             }
             className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
@@ -116,9 +115,9 @@ export default function AssignmentCardForInstructor({
           onConfirm={async (updatedAssignmentData: any) => {
             try {
               await updateAssignment(assignment._id, updatedAssignmentData)
-              setSnackbarMessage('Assignment updated successfully')
+              toast.success('Assignment updated successfully')
             } catch (error) {
-              setSnackbarMessage('Failed to update assignment')
+              toast.error('Failed to update assignment')
               console.error(error)
             }
           }}
@@ -133,29 +132,14 @@ export default function AssignmentCardForInstructor({
             try {
               await deleteAssignment(assignment._id)
               toast.success('Assignment deleted successfully')
-              setSnackbarMessage('Assignment deleted successfully')
             } catch (error) {
               toast.error('Failed to delete assignment')
-              setSnackbarMessage('Failed to delete assignment')
               console.error(error)
             }
           }}
         />
       )}
 
-      {snackbarMessage && (
-        <Snackbar
-          open={true}
-          autoHideDuration={3000}
-          onClose={() => setSnackbarMessage('')}
-        >
-          <Alert
-            severity={snackbarMessage.includes('success') ? 'success' : 'error'}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      )}
     </div>
   )
 }

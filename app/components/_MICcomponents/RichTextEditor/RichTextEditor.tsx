@@ -10,8 +10,7 @@ import BulletList from '@tiptap/extension-bullet-list'
 import OrderedList from '@tiptap/extension-ordered-list'
 import ImageResize from 'tiptap-extension-resize-image'
 import Link from '@tiptap/extension-link'
-import sanitizeHtml from 'sanitize-html'
-import { convert } from 'html-to-text'
+import '@/app/global.css'
 import './RichTextEditor.scss'
 
 export default function RichTextEditor({ content, onChange }) {
@@ -99,29 +98,8 @@ export default function RichTextEditor({ content, onChange }) {
       }
     },
     onUpdate: ({ editor }) => {
-      const htmlContent = editor.getHTML()
-      const plainTextContent = convert(htmlContent, {
-        wordwrap: 130,
-        selectors: [
-          { selector: 'h1', options: { uppercase: false } },
-          { selector: 'h2', options: { uppercase: false } },
-          { selector: 'h3', options: { uppercase: false } },
-          { selector: 'strong', format: 'bold' },
-          { selector: 'em', format: 'italic' },
-          { selector: 'u', format: 'underline' },
-          { selector: 'strike', format: 'strikethrough' },
-          { selector: 'a', options: { uppercase: false } },
-          { selector: 'ul', options: { uppercase: false } },
-          { selector: 'ol', options: { uppercase: false } },
-          { selector: 'li', format: 'listItem' },
-          { selector: 'img', options: { uppercase: false } },
-          { selector: 'blockquote', options: { uppercase: false } },
-          { selector: 'code', format: 'code' },
-          { selector: 'pre', options: { uppercase: false } }
-        ]
-      })
-      console.log(plainTextContent)
-      onChange(plainTextContent)
+      console.log(editor.getHTML())
+      onChange(editor.getHTML())
     }
   })
 

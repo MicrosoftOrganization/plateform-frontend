@@ -23,7 +23,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/ui/form'
-import { Alert, Snackbar } from '@mui/material'
 import {toast} from 'react-hot-toast'
 
 // Helper function to extract plain text from HTML content
@@ -63,9 +62,6 @@ const UpdateAssignmentModal: React.FC<UpdateAssignmentModalProps> = ({
 }) => {
   const { updateAssignment } = useAssignmentStore()
 
-  // State for Snackbar control
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
 
   const form = useForm({
     mode: 'onTouched',
@@ -86,15 +82,7 @@ const UpdateAssignmentModal: React.FC<UpdateAssignmentModalProps> = ({
     })
   }, [initialTitle, initialDescription, initialDate, form])
 
-  const handleSnackbarClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setSnackbarOpen(false)
-  }
+ 
 
   const handleUpdate = async (data: any) => {
     const updatedAssignment = {
@@ -103,32 +91,27 @@ const UpdateAssignmentModal: React.FC<UpdateAssignmentModalProps> = ({
       DueDate: data.date
     }
 
-    // console.log('Attempting to update assignment with data:', updatedAssignment)
 
     try {
       // Call the update function from the store and await its resolution
       const result = await updateAssignment(assignmentId, updatedAssignment)
 
-      // console.log('Update result:', result) // Log the result from the store function
       toast.success('Assignment updated successfully')
-      setSnackbarMessage('Assignment updated successfully')
-      setSnackbarOpen(true)
       onClose() // Close modal after update
     } catch (error) {
       toast.error('Failed to update assignment')
       console.error('Error updating assignment', error)
-      setSnackbarMessage('Failed to update assignment')
-      setSnackbarOpen(true)
+  
     }
   }
 
   return (
     <Modal size={'3xl'} isOpen={isOpen} onOpenChange={onClose}>
       <ModalContent>
-        <ModalHeader className='flex flex-col rounded-md bg-gradient-to-r from-secondary to-primary text-white'>
+        <ModalHeader className='flex flex-col bg-gradient-to-r from-secondary to-primary text-white'>
           Update Assignment
         </ModalHeader>
-        <ModalBody className='flex w-full flex-col space-y-4 p-4'>
+        <ModalBody className='flex w-full flex-col space-y-4 p-4 text-slate-500 '>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleUpdate)}>
               {/* Title Input Field */}
@@ -206,21 +189,6 @@ const UpdateAssignmentModal: React.FC<UpdateAssignmentModalProps> = ({
           </Form>
         </ModalBody>
       </ModalContent>
-
-      {/* Snackbar to show success or error message */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarMessage.includes('success') ? 'success' : 'error'}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Modal>
   )
 }

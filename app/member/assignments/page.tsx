@@ -69,14 +69,16 @@ const Page = () => {
           )}
         </div>
         <div className='col-span-1'>
-          
           <Accordion />
+        </div>
+        <div className="col-start-1 col-end-4 justify-self-center self-center mt-5 mb-5">
           <PaginationComponent
             currentPage={currentPage}
             totalItems={assignments ? assignments.length : 0}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
           />
+
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import {
 import Image from 'next/image'
 import { useResponseStore } from '@/app/store/MyStore/ResponseStore'
 import { useAuthStore } from '@/app/store/MyStore/AuthStore'
-
+import DOMPurify from 'dompurify'
 export default function AssignmentModal({
   isOpen,
   onOpenChange,
@@ -36,43 +36,28 @@ export default function AssignmentModal({
     fetchData()
   }, [fetchResponses, User_Id])
 
-  // Function to break content into lines
-  const breakText = (text, maxLength = 80) => {
-    const regex = new RegExp(`.{1,${maxLength}}`, 'g')
-    return text.match(regex)
-  }
-
   return (
     <Modal size={'3xl'} isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {onClose => (
           <>
-            <ModalHeader className='flex flex-col rounded-md bg-gradient-to-r from-secondary to-primary text-white'>
+            <ModalHeader className='flex flex-col bg-gradient-to-r from-secondary to-primary text-white'>
               Assignment Details
             </ModalHeader>
-            <ModalBody className='flex w-full flex-col p-4'>
+            <ModalBody className='flex w-full flex-col p-4 text-slate-500'>
               <div className='flex w-full flex-col items-start justify-start space-y-4 md:space-x-4 md:space-y-0'>
                 <div className='mb-4 flex w-full items-start justify-start gap-4 md:mb-0'>
-                  <Image
-                    src={'/images/Member/MemberBackground.png'}
-                    alt='Person'
-                    className='m-0 h-12 w-12 self-center rounded-full'
-                    width={48}
-                    height={48}
-                  />
                   <div className='mb-2 flex-1 text-start'>
                     <h5 className='text-start text-lg font-extrabold'>
                       {instructor}
                     </h5>
                     <h6 className='text-sm text-gray-500'>{date}</h6>
-                    <p className='mt-2 w-full text-sm text-gray-700 md:text-base'>
-                      {breakText(content).map((line, idx) => (
-                        <span key={idx}>
-                          {line}
-                          <br />
-                        </span>
-                      ))}
-                    </p>
+                    <div
+                      className='richtext-container p-4'
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content)
+                      }}  
+                    />
                   </div>
                 </div>
               </div>

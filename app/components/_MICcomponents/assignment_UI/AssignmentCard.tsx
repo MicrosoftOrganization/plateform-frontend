@@ -1,10 +1,11 @@
 'use client'
-
+import '@/app/global.css'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { useDisclosure, Button } from '@nextui-org/react'
 import AssignmentModal from '@/mic-component/assignment_UI/AssignmentModal'
 import dayjs from 'dayjs'
+import DOMPurify from 'dompurify'
 // Component: AssignmentCardForMember
 interface AssignmentCardProps {
   assignment: {
@@ -23,7 +24,7 @@ export default function AssignmentCard({ assignment }: AssignmentCardProps) {
     event.preventDefault() // Empêche la navigation par défaut
 
     localStorage.setItem('selectedAssignmentId', id)
-    window.location.href = '/Instructor/responses'
+    window.location.href = '/instructor/responses'
   }
   useEffect(() => {
     // Récupère l'ID de l'assignement du localStorage dans la page de destination
@@ -33,26 +34,19 @@ export default function AssignmentCard({ assignment }: AssignmentCardProps) {
 
   return (
     <div className='mx-auto mb-4 mt-4 flex h-fit w-11/12 flex-col flex-wrap rounded-lg bg-white p-5'>
-      <div className='flex items-center'>
+      <div className='flex items-center leading-loose'>
         <div>
-          <h5 className='font-extrabold'>{assignment.Title}</h5>
-          <h6 className='text-sm text-gray-500'>{dayjs(assignment.DueDate).format('DD/MM/YYYY HH:mm')}</h6>
+          <h5 className='font-extrabold text-2xl text-slate-700'>{assignment.Title}</h5>
+          <h6 className='text-sm text-gray-500'>{assignment.DueDate}</h6>
+      <div className='richtext-container p-4' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(assignment.description) }} />
+      
         </div>
       </div>
-
-      <p className='mt-2 text-justify font-extrabold'>
-        {assignment.description}
-      </p>
-
-      <div className='flex h-11 items-center justify-between'>
-        <div className='flex h-full'>
-          {/* j'ai supprimer le btn de responses inutile */}
-        </div>
-
-        <div className='flex h-full'>
+      <div className='flex items-end justify-end mt-4'>
+        <div className=''>
           <Button
             onPress={onOpen}
-            className='h-full w-32 cursor-pointer items-center justify-center rounded-full bg-MIC text-white'
+            className='h-full w-32 text-basis p-3 cursor-pointer rounded-full bg-MIC text-white'
           >
             See More
           </Button>
