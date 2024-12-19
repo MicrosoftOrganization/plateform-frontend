@@ -17,6 +17,42 @@
   .login-background {
     @apply flex h-screen items-center justify-center overflow-hidden bg-[#f9fafb] bg-cover bg-center bg-no-repeat;
   }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  .richtext-container h1 {
+    @apply text-2xl font-bold;
+  }
+
+  .richtext-container h2 {
+    @apply text-xl font-bold;
+  }
+
+  .richtext-container h3 {
+    @apply text-lg font-bold;
+  }
+
+  .richtext-container pre {
+    @apply rounded-md bg-foreground p-2 text-background;
+  }
+
+  .editor-content {
+    @apply min-h-[156px] w-full rounded-md border border-slate-900 bg-slate-100;
+  }
+
+  .toolbar-button {
+    @apply m-1 p-2;
+  }
+
+  .toolbar-button.active {
+    @apply bg-primary text-white;
+  }
+
+  .editor-container {
+    @apply relative w-full p-0;
+  }
   .blob {
     @apply absolute h-[250px] w-[250px] opacity-60 blur-[25px];
     animation: blobAnimation 20s infinite;
@@ -32,6 +68,7 @@
   .blob3 {
     @apply bottom-[20%] left-[15%] duration-1000;
   }
+
   @media (max-width: 768px) {
     .blob {
       @apply h-[100px] w-[100px];
@@ -51,6 +88,6 @@
     }
     50% {
       transform: translate(50px, 50px) scale(1.4);
-    } 
+    }
   }
 }

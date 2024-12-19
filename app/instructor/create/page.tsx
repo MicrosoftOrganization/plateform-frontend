@@ -23,14 +23,13 @@ import RichTextEditor from '@/mic-component/RichTextEditor/RichTextEditor'
 import { Button } from '@/ui/button'
 import DatePickerFormField from './DatePickerFormField'
 
-// Fonction utilitaire pour extraire du texte d'un contenu HTML
 function extractTextFromHTML(html: string) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
   return doc.body.textContent?.trim() || ''
 }
 
-// Définition du schéma de validation avec Zod
+
 const formSchema = z.object({
   title: z.string().nonempty('Title is required.'),
   description: z
@@ -73,9 +72,9 @@ export default function Create() {
 
     try {
       await createAssignment(newAssignment, departmentId) // Créer une tâche via le store Zustand
-      toast.success('Assignment created successfully.') // Afficher un message de succès
+      toast.success('Assignment created successfully.') 
       form.reset() // Réinitialiser le formulaire après soumission
-      router.push('/instructor/assignments') // Rediriger vers la page des tâches
+      router.push('/instructor/assignments')
     } catch (error) {
       toast.error('Failed to create assignment.')
       console.error('Assignment creation error:', error)

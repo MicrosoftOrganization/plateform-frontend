@@ -14,17 +14,12 @@ interface Department {
   DepartmentName: string
   imgUrl: string
 }
-const departmentImages = {
-  'Basic Web': '@public/images/departments/basic-web.png',
-  'Advanced Web': '@public/images/departments/advanced-web.png',
-  'Intermediate Web': '@public/images/departments/intermediate-web.png',
-  'AI': '@public/images/departments/ai.png',
-}
 
 export default function Dashboard() {
   const router = useRouter()
   const [departments, setDepartments] = useState<Department[]>([])
   const departmentIds = useAuthStore(state => state.user?.DepartmentIds || [])
+  let selectedDepartmentName = ''
 
   const fetchDepartments = async () => {
     try {
@@ -38,7 +33,12 @@ export default function Dashboard() {
   }
   useEffect(() => {
     fetchDepartments()
-  }, [departments])
+  }, [])
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('departmentIds', JSON.stringify(departmentIds))
+    }
+  }, [departmentIds])
 
   return (
     <div>
@@ -49,26 +49,25 @@ export default function Dashboard() {
         ) : null}
         {departments
           .filter(department => departmentIds.includes(department._id))
-          .map(department => (
-            <button
-              key={department._id}
-              onClick={() =>
-                router.push(`/member/assignments?id_dep=${department._id}`)
-              }
-            >
-              <DepartmentCard
+          .map(department => {
+            localStorage.setItem('departmentId', department._id)
+            selectedDepartmentName = department.DepartmentName
+            const imageUrl = `/images/departments/${department.DepartmentName.toLowerCase()}.png`
+            return (
+              <button
                 key={department._id}
-                name={department.DepartmentName}
-                imageUrl={departmentImages[department.DepartmentName]}
-              />
-              <Button
-                onClick={() => router.push(`/member/sessions?id_dep=${department._id}`)}
-              className='m-3 rounded-md bg-gradient-to-r from-secondary to-primary text-white'
-            >
-            GO TO SESSIONS
-          </Button>
-            </button>
-          ))}
+                onClick={() =>
+                  router.push(`/member/assignments?id_dep=${department._id}`)
+                }
+              >
+                <DepartmentCard
+                  key={department._id}
+                  name={department.DepartmentName}
+                  imageUrl={imageUrl}
+                />
+              </button>
+            )
+          })}
       </div>
     </div>
   )
