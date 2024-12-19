@@ -30,9 +30,9 @@ export default async function middleware(req: NextRequest) {
   // console.log('pathname:', pathname)
 
   // Redirect authenticated users away from the login page
-  if (isAuth && pathname === '/') {
-    return NextResponse.redirect(new URL(`/${userRole}/assignments`, req.nextUrl.origin))
-  }
+  // if (isAuth && pathname === '/') {
+  //   return NextResponse.redirect(new URL(`/${userRole}/assignments`, req.nextUrl.origin))
+  // }
 
   // Redirect unauthorized users to the "Unauthorized" page
   if (isAuth) {
