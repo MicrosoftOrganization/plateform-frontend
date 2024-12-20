@@ -107,17 +107,18 @@ export default function ToolBar({ editor }) {
       icon: <Upload className='size-4' />,
       onClick: () => addImage(),
       pressed: editor.isActive('image')
-    }, {
-      icon: <LinkIcon className='size-4' />,
-      onClick: () => {
-        if (editor.isActive('link')) {
-          removeLink()
-        } else {
-          addLink()
-        }
-      },
-      pressed: editor.isActive('link')
-    }
+    }, 
+    // {
+    //   icon: <LinkIcon className='size-4' />,
+    //   onClick: () => {
+    //     if (editor.isActive('link')) {
+    //       removeLink()
+    //     } else {
+    //       addLink()
+    //     }
+    //   },
+    //   pressed: editor.isActive('link')
+    // }
 
   ]
 

@@ -89,9 +89,9 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 0, margin: 0, padding: 0 }}>
+      <Paper sx={{ width: '100%', mb: 0, margin: 0, padding: 0, borderRadius: 2 }}>
         <Toolbar
-          className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
+          className='rounded-t-md bg-gradient-to-r from-secondary to-primary text-white'
           sx={[
             { pl: { sm: 2 }, pr: { xs: 1, sm: 1 } },
             selected && {

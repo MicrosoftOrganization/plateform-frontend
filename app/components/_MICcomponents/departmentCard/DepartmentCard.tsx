@@ -16,7 +16,7 @@ const DepartmentCard: React.FC<DepartmentCardProps> = ({ name, imageUrl }) => {
     </CardHeader>
     <CardBody className='overflow-visible py-2'>
       <Image
-        alt='Card background'
+        alt={ `${name} department`}
         className='rounded-xl object-contain'
         src={imageUrl}
         width={300}

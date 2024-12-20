@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ['latin-ext'], weight: '400' })
 export default function Navbar() {
   const logout = useAuthStore(state => state.logout)
   const user = useAuthStore(state => state.user) || {}
-
+  const departmentId = localStorage.getItem('departmentId')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const getUserInitials = () => {
@@ -155,7 +155,7 @@ export default function Navbar() {
                 <Link
                   href={
                     user.role === 'member'
-                      ? '/member/sessions'
+                      ? '/member/sessions'+'?id_dep='+departmentId
                       : '/instructor/sessions'
                   }
                   className='block rounded px-3 py-2 text-black hover:bg-gray-100 dark:text-white md:p-0 md:text-gray-300 md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-primary'
@@ -168,7 +168,7 @@ export default function Navbar() {
               <Link
                 href={
                   user.role === 'member'
-                    ? '/member/assignments'
+                    ? '/member/assignments/'+'?id_dep='+departmentId
                     : '/instructor/assignments'
                 }
                 className='block rounded px-3 py-2 text-black hover:bg-gray-100 dark:text-white md:p-0 md:text-gray-300 md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-primary'
