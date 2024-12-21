@@ -15,9 +15,8 @@ import { useAuthStore } from '@/store/MyStore/AuthStore'
 import PaginationComponent from '@/mic-component/PaginationComponent/PaginationComponent'
 import AssignmentCardForInstructor from '@/mic-component/Instructor_UI/AssignmentCardForInstructor/AssignmentCardForInstructor'
 import EnhancedTable from '@/mic-component/Admin_UI/TableComponent/TableComponent'
-import UpdateAssignmentModal from '@/mic-component/Instructor_UI/AssignmentUpdateModalForInstructor/AssignmentUpdateModalForInstructor'
 import DeleteAssignmentModal from '@/mic-component/Instructor_UI/AssignmentDeleteModalForInstructor/AssignmentDeleteModalForInstructor'
-import AssignmentModal from '@/mic-component/Instructor_UI/AssignmentModalForInstructor/AssignmentModalForInstructor'
+import AssignmentModal from '@/mic-component/Instructor_UI/AssignmentModal/AssignmentModal'
 import { toast } from 'react-hot-toast'
 import dayjs from 'dayjs'
 
@@ -76,7 +75,7 @@ const Page = () => {
   const confirmDeleteAssignment = async () => {
     if (assignmentToDelete) {
       try {
-        await deleteAssignment(assignmentToDelete)
+        await deleteAssignment(assignmentToDelete, user.DepartmentId)
         console.log(assignmentToDelete)
         console.log('hello 2 ')
 
@@ -97,6 +96,7 @@ const Page = () => {
     { id: 'Title', numeric: false, disablePadding: true, label: 'Title' },
     { id: 'DueDate', numeric: false, disablePadding: false, label: 'Due Date' }
   ]
+  
 
   return (
     <>
@@ -163,7 +163,9 @@ const Page = () => {
               <div className='flex space-x-4'>
                 <Button
                   className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
-                  onClick={() => handleEditAssignment(row._id)}
+                  onClick={() => {
+                    router.push(`/instructor/create?assignmentId=${row._id}`)
+                  }}
                   variant='contained'
                 >
                   Edit
@@ -193,19 +195,8 @@ const Page = () => {
         </Box>
       )}
 
-      {editingAssignment && (
-        <UpdateAssignmentModal
-          isOpen={openUpdateDialog}
-          onClose={() => {
-            setOpenUpdateDialog(false)
-            setEditingAssignment(null)
-          }}
-          assignmentId={editingAssignment._id}
-          initialTitle={editingAssignment.Title}
-          initialDescription={editingAssignment.Description}
-          initialDate={editingAssignment.DueDate}
-        />
-      )}
+     
+    
 
       {openDeleteDialog && (
         <DeleteAssignmentModal
@@ -219,11 +210,9 @@ const Page = () => {
         <AssignmentModal
           isOpen={openAssignmentModal}
           onOpenChange={setOpenAssignmentModal}
-          instructor={selectedAssignment.Instructor}
-          date={selectedAssignment.DueDate} 
-          content={selectedAssignment.Description}
-          resources={selectedAssignment.Resources}
-          imageUrl={selectedAssignment.ImageUrl}
+          DueDate={selectedAssignment.DueDate} 
+          Description={selectedAssignment.Description}
+          Title={selectedAssignment.Title}
           assignmentId={selectedAssignment._id}
         />
       )}
