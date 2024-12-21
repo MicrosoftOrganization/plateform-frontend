@@ -18,11 +18,12 @@ export default function RootLayout({ children }) {
   return (
     <html
       style={{
-        scrollBehavior: 'smooth'
+        scrollBehavior: 'smooth',
+        backgroundColor: '#DCE4E4', 
       }}
       lang='en'
     >
-      <body className={inter.className}>
+      <body className={inter.className }>
         <NextUIProvider>
           {children}
           <ToasterProvider />

@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import axiosInstance from '@/axiosInstance'
 import { ENDPOINTS } from '@/store/constants/api'
 import { User } from '@/store/Models/User'
+import {throttle} from '@/utils/throttle'
 
 type AuthState = {
   user: User | null
@@ -60,7 +61,7 @@ export const useAuthStore = create<AuthState>()(
           throw error
         }
       },
-      logout: async () => {
+      logout: throttle(async () => {
         try {
           const response = await axiosInstance.post(ENDPOINTS.LOGOUT)
           document.cookie = 'token=; Max-Age=0; path=/; domain=' + window.location.hostname // Clear the token cookie
@@ -68,11 +69,12 @@ export const useAuthStore = create<AuthState>()(
             toast.success('Logout successful')
             set({ user: null, isAuthenticated: false }) // Réinitialiser l'état lors de la déconnexion
           }
+          window.location.href = '/'
         } catch (error) {
           console.error('Logout failed:', error)
           toast.error('Logout failed')
         }
-      }
+      }, 1000)
     }),
     { name: 'auth-store' }
   )

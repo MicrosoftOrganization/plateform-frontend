@@ -12,6 +12,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/ui/form'
+import { FormProvider } from 'react-hook-form'
 import { Input } from '@/ui/input'
 import {
   Select,
@@ -22,11 +23,10 @@ import {
 } from '@/ui/select'
 import DatePickerDemo from '@/ui/date-picker'
 import { useSessionsStore } from '@/app/store/MyStore/SessionsStore'
-import { toast } from 'react-toastify'
 import InstructorSelect from '../Instructor_UI/InstructorSelect/InstructorSelect'
 import DepartmentSelect from '../Admin_UI/DepartmentSelect/DepartmentSelect'
 import { useAuthStore } from '@/app/store/MyStore/AuthStore'
-
+import { toast } from 'react-hot-toast'
 const sessionSchema = z.object({
   Title: z.string().nonempty({ message: 'Title is required' }),
   Description: z.string().nonempty({ message: 'Description is required' }),
@@ -77,37 +77,35 @@ export default function SessionForm({
       setLoading(true)
       if (editingSession) {
         await updateSession(editingSession._id, data)
-        toast.success('Session mise à jour avec succès!', {
-          position: 'top-center'
-        })
+        toast.success('Session updated succesfully')
       } else {
         const updatedData = {
           ...data,
           InstructorId: data.Instructor
         }
         await addSession(updatedData, user.DepartmentId)
-        toast.success('Session ajoutée avec succès!', {
-          position: 'top-center'
-        })
-      }
-
+      toast.success('Session added succesfully')
       await fetchSessions(user.DepartmentId)
       form.reset()
       setEditingSession(null)
       if (onClose) {
         onClose() // Appel de la fonction pour fermer le modal
       }
+    }
     } catch (error) {
-      toast.error("Erreur lors de l'opération", { position: 'top-center' })
+     toast.error('error while adding session')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className='flex h-full flex-col items-center justify-center rounded-xl border bg-slate-300 shadow-2xl'>
+    // <div className='flex h-full flex-col items-center justify-center rounded-xl border bg-slate-300 shadow-2xl'>
       <div className='w-full max-w-2xl rounded-lg bg-white p-3 shadow-md'>
-        <Form {...form}>
+        <div className='mb-6 w-full text-center'>
+          <h1 className='text-2xl font-bold'>Session Form</h1>
+        </div>
+        <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
             className='grid grid-cols-1 gap-6 p-2'
@@ -206,8 +204,8 @@ export default function SessionForm({
               </Button>
             </div>
           </form>
-        </Form>
+        </FormProvider>
       </div>
-    </div>
+    // </div>
   )
 }
