@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/ui/button'
 import { Calendar } from '@/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover'
+import dayjs from 'dayjs'
 
 export default function DatePickerDemo() {
   const [date, setDate] = React.useState<Date>()
@@ -20,7 +21,7 @@ export default function DatePickerDemo() {
           )}
         >
           <CalendarIcon className='mr-2 h-4 w-4' />
-          {date ? format(date, 'PPP') : <span>Pick a date</span>}
+          {date ? dayjs(date).format('DD MMM YYYY') : 'Select a date'}
         </Button>
       </PopoverTrigger>
       <PopoverContent

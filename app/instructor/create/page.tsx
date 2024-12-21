@@ -1,28 +1,23 @@
 'use client'
 
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/ui/form'
 import { Input } from '@/ui/input'
-import { useAssignmentStore } from '@/app/store/MyStore/AssignmentsStore'
-import { Alert, Snackbar } from '@mui/material'
-import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
-import RichTextEditor from '@/mic-component/RichTextEditor/RichTextEditor'
-import { Button } from '@/ui/button'
-import DatePickerFormField from './DatePickerFormField'
-
+import { useAssignmentStore } from '@/app/store/MyStore/AssignmentsStore'
+import  RichTextEditor  from '@/mic-component/RichTextEditor/RichTextEditor'
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { format, parse } from 'date-fns'
+import { Calendar } from '@/ui/calendar'
+import { TimePicker } from '@/ui/time-picker/time-picker'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/ui/form'
+import { Assignment } from '@/store/Models/Assignment'
+import { useSearchParams } from 'next/navigation'
+import { cn } from '@/lib/utils'
 function extractTextFromHTML(html: string) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
@@ -34,58 +29,73 @@ const formSchema = z.object({
   description: z
     .string()
     .refine(value => extractTextFromHTML(value).trim().length >= 5, {
-      message: 'The description must be at least 5 characters long.'
+      message: 'The description must be at least 5 characters long.',
     }),
-  DueDate: z.string({
-    required_error: 'Due date is required.'
-  })
+  DueDate: z.date(),
 })
 
-export default function Create() {
+export default function CreateOrUpdateAssignment() {
   const router = useRouter()
-  const { createAssignment } = useAssignmentStore()
+  const { createAssignment, updateAssignment } = useAssignmentStore()
+  const searchParams = useSearchParams()
+  const departmentId = searchParams.get('departmentId') // Récupère l'ID du département
+  const assignmentId = searchParams.get('assignmentId') // Récupère l'ID de l'assignation pour l'édition
 
-  // Configuration de useForm avec validation Zod
+  // Pour remplir les données lors de la modification
+  const existingAssignment = useAssignmentStore(state =>
+    assignmentId ? state.assignments.find(assignment => assignment._id == assignmentId) : null
+  )
+
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      DueDate: undefined
-    }
+      title: existingAssignment?.Title || '',
+      description: existingAssignment?.Description || '',
+      DueDate: existingAssignment ? parse(
+        existingAssignment.DueDate,
+              'dd/MM/yyyy HH:mm:ss',
+              new Date()
+            )  : new Date(),
+    },
   })
 
-  const searchParams = useSearchParams()
-  const departmentId = searchParams.get('departmentId') // Récupère l'ID du département
-
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log('Form Data:', data)
-
-    const newAssignment = {
-      Title: data.title,
-      Description: data.description,
-      DueDate: data.DueDate,
-      Attachments: []
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const formattedDate = format(values.DueDate, 'dd/MM/yyyy HH:mm:ss')
+    const newAssignment: Assignment = {
+      _id: existingAssignment?._id || '', 
+      Title: values.title,
+      Description: values.description,
+      DueDate: formattedDate,
+      Attachments: [],
     }
-    console.log('newAssignment:', newAssignment)
 
     try {
-      await createAssignment(newAssignment, departmentId) // Créer une tâche via le store Zustand
-      toast.success('Assignment created successfully.')
-      form.reset() // Réinitialiser le formulaire après soumission
-      router.push('/instructor/assignments')
+      if (existingAssignment) {
+        // Mise à jour
+        await updateAssignment(existingAssignment._id, newAssignment)
+        toast.success('Assignment updated successfully.')
+      } else {
+        // Création
+        await createAssignment(newAssignment, departmentId)
+        toast.success('Assignment created successfully.')
+      }
+      form.reset() // Réinitialise le formulaire après la soumission
+      router.push('/instructor/assignments') // Redirige après la soumission
     } catch (error) {
-      toast.error('Failed to create assignment.')
-      console.error('Assignment creation error:', error)
+      toast.error('Failed to process the assignment.')
+      console.error('Assignment error:', error)
     }
   }
 
   return (
     <div className='mx-auto w-11/12 max-w-3xl pt-36 text-slate-700'>
-      <h1 className='mb-7 text-start text-4xl'>Create a new assignment</h1>
+      <h1 className='mb-7 text-start text-4xl'>
+        {existingAssignment ? 'Update the assignment' : 'Create a new assignment'}
+      </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/* Champ Title */}
+          {/* Champ Titre */}
           <FormField
             control={form.control}
             name='title'
@@ -103,13 +113,40 @@ export default function Create() {
           {/* Champ DueDate */}
           <FormField
             control={form.control}
-            name='dueDate'
+            name='DueDate'
             render={({ field }) => (
-              <FormItem className='mb-4'>
-                <FormLabel>Due Date</FormLabel>
-                <FormControl>
-                  <DatePickerFormField form={form} />
-                </FormControl>
+              <FormItem className='flex flex-col items-start'>
+                <FormLabel>dueDate</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={cn(
+                        'w-[280px] justify-start text-left font-normal',
+                        !field.value && 'text-muted-foreground'
+                      )}
+                    >
+                      <CalendarIcon className='mr-2 h-4 w-4' />
+                      {field.value ? (
+                        format(field.value, 'PPP HH:mm:ss')
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto bg-gray-100 p-0'>
+                    <Calendar
+                      mode='single'
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={date => date < new Date()}
+                      initialFocus
+                    />
+                    <div className='border-border border-t p-3'>
+                      <TimePicker setDate={field.onChange} date={field.value} />
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}
@@ -135,7 +172,7 @@ export default function Create() {
 
           {/* Bouton Soumettre */}
           <Button className='mt-4' type='submit'>
-            Submit
+            {existingAssignment ? 'Update' : 'Submit'}
           </Button>
         </form>
       </Form>
