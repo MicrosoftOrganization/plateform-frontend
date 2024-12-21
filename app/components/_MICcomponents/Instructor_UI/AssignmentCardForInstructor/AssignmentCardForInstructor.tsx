@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { useDisclosure, Button } from '@nextui-org/react'
 import { FiEdit, FiTrash } from 'react-icons/fi'
 import { useAssignmentStore } from '@/store/MyStore/AssignmentsStore'
-import UpdateAssignmentModal from '@/mic-component/Instructor_UI/AssignmentUpdateModalForInstructor/AssignmentUpdateModalForInstructor'
 import DeleteAssignmentModal from '@/mic-component/Instructor_UI/AssignmentDeleteModalForInstructor/AssignmentDeleteModalForInstructor'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
@@ -75,19 +74,20 @@ export default function AssignmentCardForInstructor({
         </div>
       </div>
 
-      <p className='mt-2 text-justify font-extrabold'>
+      {/* <p className='mt-2 text-justify font-extrabold'>
         {isExpanded ? assignment.Description : truncatedDescription}
-      </p>
+      </p> */}
 
       {/* View More / See Less Button */}
-      {assignment.Description.length > maxChars && (
+      {/* {assignment.Description.length > maxChars &&
+       (
         <button
           onClick={handleToggleDescription}
           className='mt-2 block text-blue-500 underline'
         >
           {isExpanded ? 'See Less' : 'View More'}
         </button>
-      )}
+      )} */}
 
       <div className='mt-4 flex h-11 items-center justify-between'>
         <div className='flex h-full'>

@@ -1,0 +1,50 @@
+.blob {
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    opacity: 0.6;
+    filter: blur(25px);
+    animation: blobAnimation 20s infinite;
+  }
+  
+  .blob1 {
+    left: 2%;
+    top: 5%;
+    transition-duration: 1000ms;
+  }
+  
+  .blob2 {
+    bottom: 20%;
+    top: 30%;
+    transition-duration: 1000ms;
+  }
+  
+  .blob3 {
+    bottom: 20%;
+    left: 15%;
+    transition-duration: 1000ms;
+  }
+  
+  @media (max-width: 768px) {
+    .blob {
+      height: 100px;
+      width: 100px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .blob {
+      height: 100px;
+      width: 100px;
+    }
+  }
+  
+  @keyframes blobAnimation {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(50px, 50px) scale(1.4);
+    }
+  }

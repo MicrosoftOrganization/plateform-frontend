@@ -102,13 +102,12 @@ export default function AssignmentModal({
                   <ResponseSearch Assignment_Id={Assignment_Id} />
                 </div>
 
-                <div className='flex w-full items-center gap-3 px-3'>
+               {fetchResponses && <div className='flex w-full items-center gap-3 px-3'>
                   <form
                     onSubmit={handleSubmit(onSubmit)}
                     className='flex w-full items-center gap-3'
                   >
                     <Input
-                      value={responseContent}
                       onChange={e => setResponseContent(e.target.value)}
                       placeholder={placeholder}
                       className='mt-2 w-full rounded-lg border border-solid border-gray-400 md:w-full'
@@ -124,7 +123,7 @@ export default function AssignmentModal({
                       <Send size={24} />
                     </Button>
                   </form>
-                </div>
+                </div> }
               </div>
             </ModalBody>
             <ModalFooter className='flex flex-col items-start'>

@@ -69,9 +69,9 @@ const assignmentService = {
   },
 
   // Delete an assignment
-  deleteAssignment: async (assignmentId: string): Promise<void> => {
+  deleteAssignment: async (assignmentId: string , departmentId : string): Promise<void> => {
     try {
-      await axiosInstance.delete(ENDPOINTS.DELETE_ASSIGNMENT(assignmentId))
+      await axiosInstance.delete(ENDPOINTS.DELETE_ASSIGNMENT(assignmentId , departmentId))
       console.log('Deleted Assignment:', assignmentId)
     } catch (error) {
       console.error('Error deleting assignment:', error)

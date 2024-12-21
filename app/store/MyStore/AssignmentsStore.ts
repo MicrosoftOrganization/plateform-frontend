@@ -17,7 +17,7 @@ interface AssignmentState {
     assignmentId: string,
     updatedAssignment: Partial<Assignment>
   ) => Promise<void>
-  deleteAssignment: (assignmentId: string) => Promise<void>
+  deleteAssignment: (assignmentId: string , DepartmentId : string) => Promise<void>
 }
 
 export const useAssignmentStore = create<AssignmentState>(set => ({
@@ -82,15 +82,15 @@ export const useAssignmentStore = create<AssignmentState>(set => ({
       // Attempt to update the assignment via the service
       await assignmentService.updateAssignment(assignmentId, updatedAssignment)
 
-      // Update the state with the new assignment data
-      set(state => ({
-        assignments: state.assignments.map(assignment =>
-          assignment._id === assignmentId
-            ? { ...assignment, ...updatedAssignment }
-            : assignment
-        ),
-        isLoading: false // Reset loading state on success
-      }))
+      // // Update the state with the new assignment data
+      // set(state => ({
+      //   assignments: state.assignments.map(assignment =>
+      //     assignment._id === assignmentId
+      //       ? { ...assignment, ...updatedAssignment }
+      //       : assignment
+      //   ),
+      //   isLoading: false // Reset loading state on success
+      // }))
     } catch (error) {
       // Handle error by setting error message and resetting loading state
       set({ error: 'Error updating assignment', isLoading: false })
@@ -98,10 +98,10 @@ export const useAssignmentStore = create<AssignmentState>(set => ({
   },
 
   // Delete an assignment
-  deleteAssignment: async (assignmentId: string) => {
+  deleteAssignment: async (assignmentId: string , DepartmentId : string) => {
     set({ isLoading: true, error: null })
     try {
-      await assignmentService.deleteAssignment(assignmentId)
+      await assignmentService.deleteAssignment(assignmentId , DepartmentId)
       set(state => ({
         assignments: state.assignments.filter(
           assignment => assignment._id !== assignmentId

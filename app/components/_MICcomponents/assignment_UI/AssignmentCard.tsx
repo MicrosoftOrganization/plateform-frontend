@@ -38,7 +38,7 @@ export default function AssignmentCard({ assignment }: AssignmentCardProps) {
         <div>
           <h5 className='font-extrabold text-2xl text-slate-700'>{assignment.Title}</h5>
           <h6 className='text-sm text-gray-500'>{assignment.DueDate}</h6>
-      <div className='richtext-container p-4' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(assignment.description) }} />
+      {/* <div className='richtext-container p-4' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(assignment.description) }} /> */}
       
         </div>
       </div>
