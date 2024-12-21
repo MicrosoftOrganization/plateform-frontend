@@ -11,7 +11,7 @@ import {
 import { ENDPOINTS } from '@/store/constants/api'
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 
-const InstructorSelect = ({ form, defaultInstructorName }) => {
+const InstructorSelect = ({ form }) => {
   const [instructors, setInstructors] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -24,19 +24,6 @@ const InstructorSelect = ({ form, defaultInstructorName }) => {
         DepartmentId: user.DepartmentId
       })
       setInstructors(response.data.instructors)
-      console.log(response.data.instructors)
-      console.log(response.data.instructors)
-
-      // Set the default value if defaultInstructorName is provided
-      if (defaultInstructorName) {
-        const matchingInstructor = response.data.instructors.find(
-          instructor => instructor.NomPrenom == defaultInstructorName
-        )
-        if (matchingInstructor) {
-          form.setValue('Instructor', defaultInstructorName)
-        }
-      }
-
       setLoading(false)
     } catch (error) {
       console.error('Error fetching instructors:', error)
@@ -73,7 +60,7 @@ const InstructorSelect = ({ form, defaultInstructorName }) => {
               </MenuItem>
               {/* Map through instructors and display each as a MenuItem */}
               {instructors.map(instructor => (
-                <MenuItem key={instructor._id} value={instructor.NomPrenom}>
+                <MenuItem key={instructor._id} value={instructor._id}>
                   {instructor.NomPrenom}
                 </MenuItem>
               ))}

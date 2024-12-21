@@ -176,7 +176,7 @@ const Page = () => {
                     setOpenAssignmentModal(true)
                   }}
                 >
-                  View
+                  Details
                 </Button>
                 <Button
                   className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
@@ -220,7 +220,7 @@ const Page = () => {
           isOpen={openAssignmentModal}
           onOpenChange={setOpenAssignmentModal}
           instructor={selectedAssignment.Instructor}
-          date={dayjs(selectedAssignment.DueDate).format('DD/MM/YYYY HH:mm')} 
+          date={selectedAssignment.DueDate} 
           content={selectedAssignment.Description}
           resources={selectedAssignment.Resources}
           imageUrl={selectedAssignment.ImageUrl}
