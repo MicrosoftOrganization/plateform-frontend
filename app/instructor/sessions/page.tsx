@@ -23,7 +23,7 @@ import PaginationComponent from '@/mic-component/PaginationComponent/PaginationC
 import SessionForm from '@/mic-component/sessionForm/SessionForm'
 import EnhancedTable from '@/mic-component/Admin_UI/TableComponent/TableComponent'
 
-const Page: React.FC = () => {
+const Page = () => {
   const sessions = useSessionsStore(state => state.sessions)
   const fetchSessions = useSessionsStore(state => state.fetchSessions)
   const user = useAuthStore(state => state.user)
@@ -177,7 +177,7 @@ const Page: React.FC = () => {
             item
             xs={12}
             md={4}
-            sx={{ marginTop: { xs: 0, md: 0 }, padding: 0 }}
+            sx={{ marginTop: { xs: 2, md: 4 }, padding: 0 }}
           >
             <SessionForm
               editingSession={editingSession}

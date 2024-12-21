@@ -13,26 +13,26 @@ import {
   FormMessage
 } from '@/ui/form'
 import { Input } from '@/ui/input'
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue
-} from '@/ui/select'
-import DatePickerDemo from '@/ui/date-picker'
+
+import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover'
+import { CalendarIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { format, parse } from 'date-fns'
+import { Calendar } from '@/ui/calendar'
+import { TimePicker } from '@/ui/time-picker/time-picker'
+
 import { useSessionsStore } from '@/app/store/MyStore/SessionsStore'
 import { toast } from 'react-toastify'
 import InstructorSelect from '../Instructor_UI/InstructorSelect/InstructorSelect'
-import DepartmentSelect from '../Admin_UI/DepartmentSelect/DepartmentSelect'
 import { useAuthStore } from '@/app/store/MyStore/AuthStore'
+import { Session } from '@/store/Models/Session'
 
 const sessionSchema = z.object({
   Title: z.string().nonempty({ message: 'Title is required' }),
   Description: z.string().nonempty({ message: 'Description is required' }),
-  Date: z.date({ required_error: 'Date is required' }),
   Room: z.string().nonempty({ message: 'Room is required' }),
-  Instructor: z.string().nonempty({ message: 'Instructor is required' })
+  Instructor: z.string().nonempty({ message: 'Instructor is required' }),
+  Date: z.date()
 })
 
 export default function SessionForm({
@@ -42,48 +42,78 @@ export default function SessionForm({
 }) {
   const [loading, setLoading] = useState(false)
 
-  const form = useForm({
-    resolver: zodResolver(sessionSchema),
-    defaultValues: {
-      _id: '',
-      Title: '',
-      Description: '',
-      Date: new Date(),
-      Room: '',
-      Instructor: ''
-    }
-  })
-
   const fetchSessions = useSessionsStore(state => state.fetchSessions)
   const updateSession = useSessionsStore(state => state.updateSession)
   const addSession = useSessionsStore(state => state.addSession)
   const user = useAuthStore(state => state.user)
+  const sessionSchema = z.object({
+    Title: z.string().nonempty({ message: 'Title is required' }),
+    Description: z.string().nonempty({ message: 'Description is required' }),
+    Room: z.string().nonempty({ message: 'Room is required' }),
+    Instructor: z.string().nonempty({ message: 'Instructor is required' }),
+    Date: z.date()
+  })
 
+  type FormSchemaType = z.infer<typeof sessionSchema>
+
+  const form = useForm<FormSchemaType>({
+    resolver: zodResolver(sessionSchema)
+  })
   useEffect(() => {
     if (editingSession) {
+      console.log(editingSession)
+      const formattedDate = parse(
+        editingSession.Date,
+        'dd/MM/yyyy HH:mm:ss',
+        new Date()
+      )
+      console.log('Formatted Date:', formattedDate)
+      console.log(typeof formattedDate)
+
       form.reset({
-        _id: editingSession._id,
         Title: editingSession.Title,
         Description: editingSession.Description,
-        Date: new Date(editingSession.Date), // Convertir en objet Date
+        Date: formattedDate,
         Room: editingSession.Room,
         Instructor: editingSession.Instructor
       })
     }
-  }, [user.DepartmentId, editingSession, form])
+  }, [editingSession])
 
-  const handleSubmit = async data => {
+  async function onSubmit(values: FormSchemaType) {
+    const formattedDate = format(values.Date, 'dd/MM/yyyy HH:mm:ss')
+    console.log('Formatted Date:', formattedDate)
+    console.log(typeof formattedDate)
+    console.log(values)
+
     try {
       setLoading(true)
+      // console.log(editingSession)
       if (editingSession) {
-        await updateSession(editingSession._id, data)
+        const editedData: Session = {
+          _id: editingSession._id,
+          InstructorId: editingSession.Instructor,
+          Title: values.Title,
+          Description: values.Description,
+          Room: values.Room,
+          Date: formattedDate,
+          Instructor: editingSession.Instructor,
+          createdAt: editingSession.createdAt
+        }
+        await updateSession(editingSession._id, editedData)
         toast.success('Session mise à jour avec succès!', {
           position: 'top-center'
         })
       } else {
-        const updatedData = {
-          ...data,
-          InstructorId: data.Instructor
+        const updatedData: Session = {
+          _id: null,
+          createdAt: null,
+          Instructor: values.Instructor,
+          Title: values.Title,
+          Description: values.Description,
+          Room: values.Room,
+          Date: formattedDate,
+          InstructorId: values.Instructor
         }
         await addSession(updatedData, user.DepartmentId)
         toast.success('Session ajoutée avec succès!', {
@@ -94,9 +124,6 @@ export default function SessionForm({
       await fetchSessions(user.DepartmentId)
       form.reset()
       setEditingSession(null)
-      if (onClose) {
-        onClose() // Appel de la fonction pour fermer le modal
-      }
     } catch (error) {
       toast.error("Erreur lors de l'opération", { position: 'top-center' })
     } finally {
@@ -109,7 +136,7 @@ export default function SessionForm({
       <div className='w-full max-w-2xl rounded-lg bg-white p-3 shadow-md'>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className='grid grid-cols-1 gap-6 p-2'
           >
             <FormField
@@ -146,23 +173,43 @@ export default function SessionForm({
               control={form.control}
               name='Date'
               render={({ field }) => (
-                <FormItem className='col-span-2 flex flex-col'>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Controller
-                      name='Date'
-                      control={form.control}
-                      render={({ field }) => (
-                        <DatePickerDemo
-                          selected={field.value}
-                          onChange={field.onChange}
+                <FormItem className='flex flex-col items-start'>
+                  <FormLabel>DateTime</FormLabel>
+
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={'outline'}
+                        className={cn(
+                          'w-[280px] justify-start text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className='mr-2 h-4 w-4' />
+                        {field.value ? (
+                          format(field.value, 'PPP HH:mm:ss')
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className='w-auto bg-gray-100 p-0'>
+                      <Calendar
+                        mode='single'
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={date => date < new Date()}
+                        initialFocus
+                      />
+                      <div className='border-border border-t p-3'>
+                        <TimePicker
+                          setDate={field.onChange}
+                          date={field.value}
                         />
-                      )}
-                    />
-                  </FormControl>
-                  <FormMessage>
-                    {form.formState.errors.Date?.message}
-                  </FormMessage>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -188,7 +235,12 @@ export default function SessionForm({
                 <FormItem className='col-span-2'>
                   <FormLabel>Instructor</FormLabel>
                   <FormControl>
-                    <InstructorSelect form={{ form }} />
+                    <InstructorSelect
+                      form={{
+                        form
+                      }}
+                      defaultInstructorName={editingSession?.Instructor}
+                    />
                     {/*<DepartmentSelect form={{ form }} />*/}
                   </FormControl>
                   <FormMessage>

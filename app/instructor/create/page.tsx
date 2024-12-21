@@ -29,7 +29,6 @@ function extractTextFromHTML(html: string) {
   return doc.body.textContent?.trim() || ''
 }
 
-
 const formSchema = z.object({
   title: z.string().nonempty('Title is required.'),
   description: z
@@ -72,7 +71,7 @@ export default function Create() {
 
     try {
       await createAssignment(newAssignment, departmentId) // Créer une tâche via le store Zustand
-      toast.success('Assignment created successfully.') 
+      toast.success('Assignment created successfully.')
       form.reset() // Réinitialiser le formulaire après soumission
       router.push('/instructor/assignments')
     } catch (error) {
