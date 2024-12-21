@@ -7,8 +7,8 @@ import DepartmentCard from '@/mic-component/departmentCard/DepartmentCard'
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 import { ENDPOINTS } from '@/store/constants/api'
 import axiosInstance from '@/axiosInstance*'
-import { Button } from '@mui/material'
-
+import {throttle} from '@/utils/throttle' // using to throttle the api calls and minimize the number of requests
+import { useNavStore } from '@/store/MyStore/navstore'
 interface Department {
   _id: string
   DepartmentName: string
@@ -19,9 +19,11 @@ export default function Dashboard() {
   const router = useRouter()
   const [departments, setDepartments] = useState<Department[]>([])
   const departmentIds = useAuthStore(state => state.user?.DepartmentIds || [])
-  let selectedDepartmentName = ''
 
-  const fetchDepartments = async () => {
+  let selectedDepartmentName :string =''
+
+
+  const fetchDepartments = throttle(async () => {
     try {
       const response = await axiosInstance.get(
         ENDPOINTS.GET_DEPARTMENTS_NAMES_IDS
@@ -31,15 +33,14 @@ export default function Dashboard() {
       console.error('Department fetching failed:', error)
     }
   }
+  , 2000)
   useEffect(() => {
     fetchDepartments()
   }, [])
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('departmentIds', JSON.stringify(departmentIds))
-    }
-  }, [departmentIds])
-
+function handlenav (id_dep:string ){
+  useNavStore.setState({departmentId  : id_dep})
+}
+  
   return (
     <div>
       <h1 className='mb-6 text-3xl text-slate-900'>Dashboard</h1>
@@ -50,8 +51,8 @@ export default function Dashboard() {
         {departments
           .filter(department => departmentIds.includes(department._id))
           .map(department => {
-            localStorage.setItem('departmentId', department._id)
             selectedDepartmentName = department.DepartmentName
+            handlenav(department._id)
             const imageUrl = `/images/departments/${department.DepartmentName.toLowerCase()}.png`
             return (
               <button
