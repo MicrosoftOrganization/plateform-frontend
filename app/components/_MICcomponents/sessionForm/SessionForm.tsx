@@ -22,10 +22,10 @@ import { Calendar } from '@/ui/calendar'
 import { TimePicker } from '@/ui/time-picker/time-picker'
 
 import { useSessionsStore } from '@/app/store/MyStore/SessionsStore'
-import { toast } from 'react-toastify'
 import InstructorSelect from '../Instructor_UI/InstructorSelect/InstructorSelect'
 import { useAuthStore } from '@/app/store/MyStore/AuthStore'
 import { Session } from '@/store/Models/Session'
+import { toast } from 'react-hot-toast'
 
 const sessionSchema = z.object({
   Title: z.string().nonempty({ message: 'Title is required' }),
@@ -82,13 +82,9 @@ export default function SessionForm({
 
   async function onSubmit(values: FormSchemaType) {
     const formattedDate = format(values.Date, 'dd/MM/yyyy HH:mm:ss')
-    console.log('Formatted Date:', formattedDate)
-    console.log(typeof formattedDate)
-    console.log(values)
 
     try {
       setLoading(true)
-      // console.log(editingSession)
       if (editingSession) {
         const editedData: Session = {
           _id: editingSession._id,
@@ -100,10 +96,10 @@ export default function SessionForm({
           Instructor: editingSession.Instructor,
           createdAt: editingSession.createdAt
         }
+
         await updateSession(editingSession._id, editedData)
-        toast.success('Session mise à jour avec succès!', {
-          position: 'top-center'
-        })
+
+        toast.success('Session updated successfully')
       } else {
         const updatedData: Session = {
           _id: null,
@@ -116,13 +112,18 @@ export default function SessionForm({
           InstructorId: values.Instructor
         }
         await addSession(updatedData, user.DepartmentId)
-        toast.success('Session ajoutée avec succès!', {
-          position: 'top-center'
-        })
-      }
 
+        toast.success('Session added successfully')
+      }
+      form.reset({
+        Title: '',
+        Description: '',
+        Date: new Date(),
+        Room: '',
+        Instructor: ''
+      })
       await fetchSessions(user.DepartmentId)
-      form.reset()
+
       setEditingSession(null)
     } catch (error) {
       toast.error("Erreur lors de l'opération", { position: 'top-center' })
@@ -132,8 +133,12 @@ export default function SessionForm({
   }
 
   return (
-    <div className='flex h-full flex-col items-center justify-center rounded-xl border bg-slate-300 shadow-2xl'>
-      <div className='w-full max-w-2xl rounded-lg bg-white p-3 shadow-md'>
+    <div className='flex h-full flex-col items-center justify-center rounded-b-md rounded-t-md border bg-slate-300 shadow-2xl'>
+      <div className='w-full rounded-t-md bg-gradient-to-r from-secondary to-primary p-2 text-center text-white'>
+        Create / Edit a session
+      </div>
+
+      <div className='w-full max-w-2xl rounded-lg bg-white pb-3 pl-3 pr-3 shadow-md'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

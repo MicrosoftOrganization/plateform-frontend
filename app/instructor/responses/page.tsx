@@ -17,7 +17,8 @@ import BorderColorIcon from '@mui/icons-material/BorderColor'
 import DoneAllIcon from '@mui/icons-material/DoneAll'
 import { useSearchParams } from 'next/navigation'
 import Empty from '@/mic-component/lottie_animation/Empty'
-import ExampleForm from '@/mic-component/Instructor_UI/ResponseStatusSelect/ResponseStatusSelect'
+import ResponseStatusSelect from '@/mic-component/Instructor_UI/ResponseStatusSelect/ResponseStatusSelect'
+import { toast } from 'react-hot-toast'
 
 const Page: React.FC = () => {
   const [assignmentId, setAssignmentId] = useState<string | null>(null)
@@ -36,22 +37,19 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(selectedId)
-      console.log('assignmentId')
       try {
         if (selectedId) {
           await fetchResponses(selectedId)
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération des réponses', error)
+        toast.error('Error fetching responses')
       }
     }
-    // Appelle fetchData uniquement si `assignmentId` est défini
     if (selectedId) {
       setAssignmentId(selectedId)
       fetchData()
     }
-  }, [selectedId, fetchResponses])
+  }, [selectedId])
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -128,15 +126,9 @@ const Page: React.FC = () => {
                     {new Date(response.createdAt).toLocaleString()}
                     <br />
                     <Box display='flex' justifyContent='center' mt={2}>
-                      <ExampleForm idResponse={response._id}></ExampleForm>
-
-                      <Button
-                        className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
-                        variant='contained'
-                        onClick={() => handleOpen(response)}
-                      >
-                        Send comment
-                      </Button>
+                      <ResponseStatusSelect
+                        idResponse={response._id}
+                      ></ResponseStatusSelect>
                     </Box>
                   </Typography>
                 </AccordionDetails>
@@ -184,9 +176,9 @@ const Page: React.FC = () => {
                 expanded={expanded === `panel${response._id}`}
                 onChange={handleChange(`panel${response._id}`)}
                 sx={{
-                  width: '100%', // Largeur du conteneur parent
-                  maxWidth: '600px', // Largeur maximale uniforme pour tous les accordéons
-                  margin: '0 auto' // Centre horizontalement
+                  width: '100%',
+                  maxWidth: '600px',
+                  margin: '0 auto'
                 }}
               >
                 <AccordionSummary
@@ -205,13 +197,9 @@ const Page: React.FC = () => {
                     {new Date(response.createdAt).toLocaleString()}
                     <br />
                     <Box display='flex' justifyContent='center' mt={2}>
-                      <Button
-                        className='rounded-md bg-gradient-to-r from-secondary to-primary text-white'
-                        variant='contained'
-                        onClick={() => handleOpen(response)}
-                      >
-                        Send comment
-                      </Button>
+                      <ResponseStatusSelect
+                        idResponse={response._id}
+                      ></ResponseStatusSelect>
                     </Box>
                   </Typography>
                 </AccordionDetails>
@@ -227,9 +215,9 @@ const Page: React.FC = () => {
                 fontSize: '1rem',
                 color: '#d32f2f',
                 textAlign: 'center',
-                width: '100%', // Largeur du conteneur parent
-                maxWidth: '600px', // Largeur maximale uniforme pour tous les composants
-                margin: '0 auto' // Centre horizontalement
+                width: '100%',
+                maxWidth: '600px',
+                margin: '0 auto'
               }}
             >
               No Reviewed responses
@@ -258,9 +246,9 @@ const Page: React.FC = () => {
                 expanded={expanded === `panel${response._id}`}
                 onChange={handleChange(`panel${response._id}`)}
                 sx={{
-                  width: '100%', // Largeur du conteneur parent
-                  maxWidth: '600px', // Largeur maximale uniforme pour tous les accordéons
-                  margin: '0 auto' // Centre horizontalement
+                  width: '100%',
+                  maxWidth: '600px',
+                  margin: '0 auto'
                 }}
               >
                 <AccordionSummary
@@ -279,7 +267,9 @@ const Page: React.FC = () => {
                     {new Date(response.createdAt).toLocaleString()}
                     <br />
                     <Box display='flex' justifyContent='center' mt={2}>
-                      <ExampleForm idResponse={response._id}></ExampleForm>
+                      <ResponseStatusSelect
+                        idResponse={response._id}
+                      ></ResponseStatusSelect>
                     </Box>
                   </Typography>
                 </AccordionDetails>
@@ -295,9 +285,9 @@ const Page: React.FC = () => {
                 fontSize: '1rem',
                 color: '#d32f2f',
                 textAlign: 'center',
-                width: '100%', // Largeur du conteneur parent
-                maxWidth: '600px', // Largeur maximale uniforme pour tous les composants
-                margin: '0 auto' // Centre horizontalement
+                width: '100%',
+                maxWidth: '600px',
+                margin: '0 auto'
               }}
             >
               No edited responses
@@ -323,9 +313,9 @@ const Page: React.FC = () => {
             approvedResponses.map((response, index) => (
               <Accordion
                 sx={{
-                  width: '100%', // Largeur du conteneur parent
-                  maxWidth: '600px', // Largeur maximale uniforme pour tous les accordéons
-                  margin: '0 auto' // Centre horizontalement
+                  width: '100%',
+                  maxWidth: '600px',
+                  margin: '0 auto'
                 }}
                 key={response._id}
                 expanded={expanded === `panel${response._id}`}
@@ -347,7 +337,9 @@ const Page: React.FC = () => {
                     {new Date(response.createdAt).toLocaleString()}
                     <br />
                     <Box display='flex' justifyContent='center' mt={2}>
-                      <ExampleForm idResponse={response._id}></ExampleForm>
+                      <ResponseStatusSelect
+                        idResponse={response._id}
+                      ></ResponseStatusSelect>
                     </Box>
                   </Typography>
                 </AccordionDetails>
@@ -363,9 +355,9 @@ const Page: React.FC = () => {
                 fontSize: '1rem',
                 color: '#d32f2f',
                 textAlign: 'center',
-                width: '100%', // Largeur du conteneur parent
-                maxWidth: '600px', // Largeur maximale uniforme pour tous les composants
-                margin: '0 auto' // Centre horizontalement
+                width: '100%',
+                maxWidth: '600px',
+                margin: '0 auto'
               }}
             >
               No Approved responses

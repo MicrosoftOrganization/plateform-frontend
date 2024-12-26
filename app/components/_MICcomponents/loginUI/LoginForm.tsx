@@ -73,7 +73,8 @@ export default function LoginForm() {
   }
 
   return (
-    <div className='mx-5 flex h-full flex-col items-center justify-center rounded-xl border bg-slate-300 shadow-2xl'>
+    <div className='mx-5 flex h-full flex-col items-center justify-center rounded-xl border bg-slate-50 shadow-2xl'>
+      {' '}
       <div className='w-full max-w-md rounded-lg bg-white p-7 shadow-xl'>
         <div className='mb-6 w-full text-center'>
           <TypewriterEffectSmoothDemo />

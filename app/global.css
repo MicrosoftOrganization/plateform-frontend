@@ -16,6 +16,7 @@
   }
   .login-background {
     @apply flex h-screen items-center justify-center overflow-hidden bg-[#f9fafb] bg-cover bg-center bg-no-repeat;
+    background-image: url('/images/login/login-bg.png');
   }
   body {
     background-color: hsl(var(--background));

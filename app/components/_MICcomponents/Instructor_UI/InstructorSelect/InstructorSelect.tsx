@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosInstance from '@/axiosInstance*'
 import { Controller } from 'react-hook-form'
 import {
   MenuItem,
@@ -20,14 +20,13 @@ const InstructorSelect = ({ form, defaultInstructorName }) => {
   // Function to fetch instructors
   const fetchInstructors = async () => {
     try {
-      const response = await axios.post(ENDPOINTS.GET_INSTRUCTORS_NAMES, {
-        DepartmentId: user.DepartmentId
-      })
+      const response = await axiosInstance.post(
+        ENDPOINTS.GET_INSTRUCTORS_NAMES,
+        {
+          DepartmentId: user.DepartmentId
+        }
+      )
       setInstructors(response.data.instructors)
-      console.log(response.data.instructors)
-      console.log(response.data.instructors)
-
-      // Set the default value if defaultInstructorName is provided
       if (defaultInstructorName) {
         const matchingInstructor = response.data.instructors.find(
           instructor => instructor.NomPrenom == defaultInstructorName
@@ -46,10 +45,10 @@ const InstructorSelect = ({ form, defaultInstructorName }) => {
   }
 
   useEffect(() => {
-    if (user.DepartmentId) {
+    if (user?.DepartmentId) {
       fetchInstructors()
     }
-  }, [user.DepartmentId])
+  }, [])
 
   return (
     <Controller

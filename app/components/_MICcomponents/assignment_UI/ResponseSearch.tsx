@@ -14,23 +14,29 @@ import {
 import { useResponseStore } from '@/store/MyStore/ResponseStore'
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Input } from '@nextui-org/react'
+import { Send } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 
-const ResponseSearch = ({ Assignment_Id }) => {
+const ResponseSearch = ({ Assignment_Id, placeholder }) => {
   const {
     fetchResponseByAssignmentAndUser,
     updateResponseByMember,
-    fetchedResponse
+    fetchedResponse,
+    addResponse
   } = useResponseStore()
   const user = useAuthStore(state => state.user)
   const [userId, setUserId] = useState(user.id)
   const [isEditing, setIsEditing] = useState(false)
   const [editedContent, setEditedContent] = useState('')
+  const fetchData = async () => {
+    await fetchResponseByAssignmentAndUser(Assignment_Id, userId)
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchResponseByAssignmentAndUser(Assignment_Id, userId)
-    }
-
     fetchData()
   }, [Assignment_Id, userId, fetchResponseByAssignmentAndUser])
 
@@ -46,6 +52,31 @@ const ResponseSearch = ({ Assignment_Id }) => {
       status: 'EDITED'
     })
     setIsEditing(false)
+  }
+  const responseSchema = z.object({
+    responseContent: z
+      .string()
+      .url('Response content must be a valid URL')
+      .nonempty('Response content cannot be empty')
+  })
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(responseSchema)
+  })
+  const onSubmit = async data => {
+    if (data.responseContent) {
+      try {
+        await addResponse(data.responseContent, userId, Assignment_Id)
+        toast.success('Response added successfully')
+        fetchData() // Refresh data after adding response
+      } catch (error) {
+        toast.error('Failed to add response')
+        console.error("Erreur lors de l'ajout de la réponse", error)
+      }
+    }
   }
 
   return (
@@ -135,8 +166,34 @@ const ResponseSearch = ({ Assignment_Id }) => {
       )}
 
       {!fetchedResponse && (
-        <Typography className='text-red-600'>
+        <Typography className='w-full text-red-600'>
           No response found for the given Assignment.
+          <br />
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className='flex w-full items-center gap-3'
+          >
+            <Input
+              placeholder={placeholder}
+              className='mt-2 w-full rounded-lg border border-solid border-gray-400 md:w-full'
+              fullWidth
+              {...register('responseContent')}
+            />
+            <Button
+              color='primary'
+              className='mt-2 px-4 py-2 md:w-auto'
+              type='submit'
+            >
+              <Send size={24} />
+            </Button>
+          </form>
+          <div className='flex flex-col items-start'>
+            {errors.responseContent && (
+              <p className='pl-5 text-sm text-red-700'>
+                {String(errors.responseContent.message)}
+              </p>
+            )}
+          </div>
         </Typography>
       )}
     </div>

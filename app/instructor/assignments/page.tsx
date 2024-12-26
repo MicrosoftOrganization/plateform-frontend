@@ -18,7 +18,6 @@ import EnhancedTable from '@/mic-component/Admin_UI/TableComponent/TableComponen
 import DeleteAssignmentModal from '@/mic-component/Instructor_UI/AssignmentDeleteModalForInstructor/AssignmentDeleteModalForInstructor'
 import AssignmentModal from '@/mic-component/Instructor_UI/AssignmentModal/AssignmentModal'
 import { toast } from 'react-hot-toast'
-import dayjs from 'dayjs'
 
 const Page = () => {
   const router = useRouter()
@@ -47,7 +46,7 @@ const Page = () => {
       }
     }
     loadAssignments()
-  }, [fetchAssignments, user])
+  }, [])
 
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -76,9 +75,6 @@ const Page = () => {
     if (assignmentToDelete) {
       try {
         await deleteAssignment(assignmentToDelete, user.DepartmentId)
-        console.log(assignmentToDelete)
-        console.log('hello 2 ')
-
         toast.success('Assignment deleted successfully')
       } catch {
         toast.error('Failed to delete assignment')
@@ -96,7 +92,6 @@ const Page = () => {
     { id: 'Title', numeric: false, disablePadding: true, label: 'Title' },
     { id: 'DueDate', numeric: false, disablePadding: false, label: 'Due Date' }
   ]
-  
 
   return (
     <>
@@ -195,9 +190,6 @@ const Page = () => {
         </Box>
       )}
 
-     
-    
-
       {openDeleteDialog && (
         <DeleteAssignmentModal
           isOpen={openDeleteDialog}
@@ -210,7 +202,7 @@ const Page = () => {
         <AssignmentModal
           isOpen={openAssignmentModal}
           onOpenChange={setOpenAssignmentModal}
-          DueDate={selectedAssignment.DueDate} 
+          DueDate={selectedAssignment.DueDate}
           Description={selectedAssignment.Description}
           Title={selectedAssignment.Title}
           assignmentId={selectedAssignment._id}

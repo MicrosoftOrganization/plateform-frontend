@@ -34,7 +34,7 @@ export default function AssignmentModal({
   const { responses, fetchResponses, addResponse } = useResponseStore()
   const [responseContent, setResponseContent] = useState('')
   const user = useAuthStore(state => state.user)
-  const [User_Id] = useState(user.id)
+  const [User_Id] = useState(user?.id)
   const [Assignment_Id] = useState(assignmentId)
 
   const responseSchema = z.object({
@@ -60,12 +60,12 @@ export default function AssignmentModal({
       }
     }
     fetchData()
-  }, [fetchResponses, User_Id])
+  }, [User_Id])
 
-  const onSubmit = async () => {
-    if (responseContent) {
+  const onSubmit = async data => {
+    if (data.responseContent) {
       try {
-        await addResponse(responseContent, User_Id, Assignment_Id)
+        await addResponse(data.responseContent, User_Id, Assignment_Id)
         toast.success('Response added successfully')
         setResponseContent('')
       } catch (error) {
@@ -95,14 +95,23 @@ export default function AssignmentModal({
                     {instructor}
                   </h5>
                   <h6 className='text-sm text-gray-500'>{date}</h6>
-                  <div className='richtext-container p-4' dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }} />
+                  <div
+                    className='richtext-container p-4'
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(content)
+                    }}
+                  />
                 </div>
 
                 <div className='w-full p-2 pr-10'>
-                  <ResponseSearch Assignment_Id={Assignment_Id} />
+                  <ResponseSearch
+                    Assignment_Id={Assignment_Id}
+                    placeholder={placeholder}
+                  />
                 </div>
 
-               {fetchResponses && <div className='flex w-full items-center gap-3 px-3'>
+                {/* 
+               <div className='flex w-full items-center gap-3 px-3'>
                   <form
                     onSubmit={handleSubmit(onSubmit)}
                     className='flex w-full items-center gap-3'
@@ -123,7 +132,8 @@ export default function AssignmentModal({
                       <Send size={24} />
                     </Button>
                   </form>
-                </div> }
+                </div>
+                */}
               </div>
             </ModalBody>
             <ModalFooter className='flex flex-col items-start'>

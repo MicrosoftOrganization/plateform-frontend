@@ -8,23 +8,24 @@ import AssignmentCard from '@/mic-component/assignment_UI/AssignmentCard'
 import Empty from '@/mic-component/lottie_animation/Empty'
 import PaginationComponent from '@/mic-component/PaginationComponent/PaginationComponent'
 import Accordion from '@/mic-component/InstructorAccordion/Accordion'
+import throttle from 'lodash.throttle'
+import { useAuthStore } from '@/store/MyStore/AuthStore'
 
 const Page = () => {
   const assignments = useAssignmentStore(state => state.assignments)
   const fetchAssignments = useAssignmentStore(state => state.fetchAssignments)
   const searchParams = useSearchParams()
-  const id_dep = searchParams.get('id_dep') // Récupérer id_dep depuis les query params
+  const id_dep = searchParams.get('id_dep')
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5 // Nombre d'éléments par page
+  const itemsPerPage = 5
 
+  const loadAssignments = throttle(async () => {
+    await fetchAssignments(id_dep)
+  }, 1000)
   useEffect(() => {
-    const loadAssignments = async () => {
-      await fetchAssignments(id_dep) // ID de département
-    }
-
     loadAssignments()
-  }, [fetchAssignments])
+  }, [])
 
   // Calculer les assignments à afficher pour la page actuelle
   const indexOfLastItem = currentPage * itemsPerPage
@@ -36,14 +37,11 @@ const Page = () => {
   const handlePageChange = newPage => {
     setCurrentPage(newPage)
   }
-  const router = useRouter()
 
   return (
     <div className='container mx-auto mt-32'>
       <div className='grid grid-cols-4 gap-4 px-10'>
         <div className='col-span-3'>
-       
-
           {currentAssignments.length > 0 ? (
             currentAssignments.map(assignment => (
               <Grid item xs={12} key={assignment._id}>
@@ -71,14 +69,13 @@ const Page = () => {
         <div className='col-span-1'>
           <Accordion />
         </div>
-        <div className="col-start-1 col-end-4 justify-self-center self-center mt-5 mb-5">
+        <div className='col-start-1 col-end-4 mb-5 mt-5 self-center justify-self-center'>
           <PaginationComponent
             currentPage={currentPage}
             totalItems={assignments ? assignments.length : 0}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
           />
-
         </div>
       </div>
     </div>

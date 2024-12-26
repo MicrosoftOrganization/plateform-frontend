@@ -13,19 +13,16 @@ const Page = () => {
   const user = useAuthStore(state => state.user)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 1 // Nombre de membres par page
+  const itemsPerPage = 5
 
   useEffect(() => {
     const loadMembers = async () => {
       await fetchMembers(user.DepartmentId)
-
-      console.log('Members fetched:', members)
     }
 
     loadMembers()
-  }, [fetchMembers])
+  }, [])
 
-  // Calculer les membres à afficher pour la page actuelle
   const indexOfLastMember = currentPage * itemsPerPage
   const indexOfFirstMember = indexOfLastMember - itemsPerPage
   const currentMembers = members

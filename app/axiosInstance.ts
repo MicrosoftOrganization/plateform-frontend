@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
   withCredentials: true // Ensure cookies are sent with requests
 })
 
+
 axiosInstance.interceptors.request.use(
   config => {
     const token = cookie.get('token')
