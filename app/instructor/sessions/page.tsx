@@ -36,11 +36,10 @@ const Page = () => {
   useEffect(() => {
     const loadSessions = async () => {
       await fetchSessions(user.DepartmentId)
-      console.log('Sessions fetched:', sessions)
     }
 
     loadSessions()
-  }, [fetchSessions])
+  }, [])
 
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
@@ -157,7 +156,7 @@ const Page = () => {
         </Box>
       ) : (
         <Grid container spacing={2} sx={{ margin: 4, padding: 3 }}>
-          <Grid item xs={12} md={8} sx={{ margin: 0, padding: 1 }}>
+          <Grid item xs={12} md={8} sx={{ marginTop: 4, padding: 1 }}>
             <EnhancedTable
               data={sessions}
               headCells={headCells}
@@ -177,7 +176,7 @@ const Page = () => {
             item
             xs={12}
             md={4}
-            sx={{ marginTop: { xs: 2, md: 4 }, padding: 0 }}
+            sx={{ marginTop: { xs: 2, md: 3 }, padding: 0 }}
           >
             <SessionForm
               editingSession={editingSession}

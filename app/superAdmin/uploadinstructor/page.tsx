@@ -13,8 +13,8 @@ import {
   TableRow,
   Paper
 } from '@mui/material'
-import axios from 'axios'
 import Layout from '@/mic-component/Admin_UI/Layout/Layout'
+import axiosInstance from '@/axiosInstance*'
 
 // Type pour chaque ligne du JSON
 interface JsonData {
@@ -43,9 +43,9 @@ const UploadPage: React.FC = () => {
     formData.append('file', selectedFile)
     console.log('formData:', formData) // Debugging line
 
-    try {
-      const response = await axios.post(
-        'http://localhost:4000/api/test/upload',
+    try { 
+      const response = await axiosInstance.post(
+        '/test/upload',
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' }
@@ -69,8 +69,8 @@ const UploadPage: React.FC = () => {
     }
     // console.log('Data to be saved:', jsonData); // Debugging line
     try {
-      const response = await axios.post(
-        'http://localhost:4000/api/test/save-instructor',
+      const response = await axiosInstance.post(
+        '/test/save-instructor',
         jsonData,
         {
           headers: {

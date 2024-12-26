@@ -8,13 +8,20 @@ import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import { useAssignmentStore } from '@/app/store/MyStore/AssignmentsStore'
-import  RichTextEditor  from '@/mic-component/RichTextEditor/RichTextEditor'
+import RichTextEditor from '@/mic-component/RichTextEditor/RichTextEditor'
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/popover'
 import { CalendarIcon } from 'lucide-react'
 import { format, parse } from 'date-fns'
 import { Calendar } from '@/ui/calendar'
 import { TimePicker } from '@/ui/time-picker/time-picker'
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/ui/form'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from '@/ui/form'
 import { Assignment } from '@/store/Models/Assignment'
 import { useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -29,69 +36,76 @@ const formSchema = z.object({
   description: z
     .string()
     .refine(value => extractTextFromHTML(value).trim().length >= 5, {
-      message: 'The description must be at least 5 characters long.',
+      message: 'The description must be at least 5 characters long.'
     }),
-  DueDate: z.date(),
+  DueDate: z.date()
 })
 
 export default function CreateOrUpdateAssignment() {
   const router = useRouter()
   const { createAssignment, updateAssignment } = useAssignmentStore()
   const searchParams = useSearchParams()
-  const departmentId = searchParams.get('departmentId') // Récupère l'ID du département
-  const assignmentId = searchParams.get('assignmentId') // Récupère l'ID de l'assignation pour l'édition
+  const departmentId = searchParams.get('departmentId')
+  const assignmentId = searchParams.get('assignmentId')
 
   // Pour remplir les données lors de la modification
   const existingAssignment = useAssignmentStore(state =>
-    assignmentId ? state.assignments.find(assignment => assignment._id == assignmentId) : null
+    assignmentId
+      ? state.assignments.find(assignment => assignment._id == assignmentId)
+      : null
   )
-
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: existingAssignment?.Title || '',
       description: existingAssignment?.Description || '',
-      DueDate: existingAssignment ? parse(
-        existingAssignment.DueDate,
-              'dd/MM/yyyy HH:mm:ss',
-              new Date()
-            )  : new Date(),
-    },
+      DueDate: existingAssignment
+        ? parse(existingAssignment.DueDate, 'dd/MM/yyyy HH:mm:ss', new Date())
+        : new Date()
+    }
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const formattedDate = format(values.DueDate, 'dd/MM/yyyy HH:mm:ss')
     const newAssignment: Assignment = {
-      _id: existingAssignment?._id || '', 
+      _id: existingAssignment?._id || '',
       Title: values.title,
       Description: values.description,
       DueDate: formattedDate,
-      Attachments: [],
+      Attachments: []
     }
 
     try {
       if (existingAssignment) {
-        // Mise à jour
         await updateAssignment(existingAssignment._id, newAssignment)
         toast.success('Assignment updated successfully.')
       } else {
-        // Création
         await createAssignment(newAssignment, departmentId)
         toast.success('Assignment created successfully.')
       }
-      form.reset() // Réinitialise le formulaire après la soumission
-      router.push('/instructor/assignments') // Redirige après la soumission
+      form.reset()
+      router.push('/instructor/assignments')
     } catch (error) {
       toast.error('Failed to process the assignment.')
       console.error('Assignment error:', error)
     }
   }
+  function handleCancel() {
+    form.reset({
+      title: '',
+      description: '',
+      DueDate: new Date()
+    })
+    router.push('/instructor/assignments')
+  }
 
   return (
-    <div className='mx-auto w-11/12 max-w-3xl pt-36 text-slate-700'>
-      <h1 className='mb-7 text-start text-4xl'>
-        {existingAssignment ? 'Update the assignment' : 'Create a new assignment'}
+    <div className='pt-30 mx-auto w-11/12 max-w-3xl text-slate-700'>
+      <h1 className='mb-7 text-start text-4xl text-white'>
+        {existingAssignment
+          ? 'Update the assignment'
+          : 'Create a new assignment'}
       </h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -101,7 +115,7 @@ export default function CreateOrUpdateAssignment() {
             name='title'
             render={({ field }) => (
               <FormItem className='mb-4'>
-                <FormLabel>Title</FormLabel>
+                <FormLabel className='text-white'>Title</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder='Enter title' />
                 </FormControl>
@@ -116,7 +130,7 @@ export default function CreateOrUpdateAssignment() {
             name='DueDate'
             render={({ field }) => (
               <FormItem className='flex flex-col items-start'>
-                <FormLabel>dueDate</FormLabel>
+                <FormLabel className='text-white'>Due Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -158,7 +172,7 @@ export default function CreateOrUpdateAssignment() {
             name='description'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel className='text-white'>Description</FormLabel>
                 <FormControl>
                   <RichTextEditor
                     content={field.value || ''}
@@ -171,9 +185,14 @@ export default function CreateOrUpdateAssignment() {
           />
 
           {/* Bouton Soumettre */}
-          <Button className='mt-4' type='submit'>
-            {existingAssignment ? 'Update' : 'Submit'}
-          </Button>
+          <div className='mt-4 flex justify-center space-x-4'>
+            <Button type='submit'>
+              {existingAssignment ? 'Update' : 'Submit'}
+            </Button>
+            <Button type='button' variant='secondary' onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

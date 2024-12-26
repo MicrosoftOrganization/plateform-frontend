@@ -17,9 +17,9 @@ import {
   InputLabel,
   FormControl
 } from '@mui/material'
-import axios from 'axios'
 import Layout from '@/mic-component/Admin_UI/Layout/Layout'
 import { z } from 'zod'
+import axiosInstance from '@/axiosInstance*'
 
 // Schéma pour valider les données JSON
 const jsonDataSchema = z.array(
@@ -69,8 +69,8 @@ export default function UploadPage() {
     formData.append('file', selectedFile)
 
     try {
-      const response = await axios.post(
-        'http://localhost:4000/api/test/upload',
+      const response = await axiosInstance.post(
+        '/test/upload',
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' }
@@ -145,8 +145,8 @@ export default function UploadPage() {
     }))
 
     try {
-      const response = await axios.post(
-        'http://localhost:4000/api/member/upload-many-members',
+      const response = await axiosInstance.post(
+        '/member/upload-many-members',
         { membersData },
         {
           headers: { 'Content-Type': 'application/json' }

@@ -32,9 +32,6 @@ const Member_card = ({ member }) => {
         <Typography gutterBottom variant='h6' component='div'>
           {member.NomPrenom}
         </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          Classe: {member.className}
-        </Typography>
       </CardContent>
     </Card>
   )

@@ -6,7 +6,6 @@ export const navigationLinks = [
   { label: 'Departments', path: '/superAdmin/departments' },
   { label: 'Instructors', path: '/superAdmin/Instructors' },
   { label: 'Members', path: '/superAdmin/members' },
-  { label: 'Sessions', path: '/pasEncore' },
+  { label: 'Sessions', path: '/superAdmin/sessions' },
   { label: 'Responses', path: '/pasEncore' },
-  { label: 'Assignments', path: '/pasEncore' }
 ]

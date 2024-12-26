@@ -17,11 +17,11 @@ import {
   Box
 } from '@mui/material'
 import axiosInstance from '@/axiosInstance*'
+import { toast } from 'react-hot-toast'
 
-export default function ExampleForm({ idResponse }) {
+export default function ResponseStatusSelect({ idResponse }) {
   const [loading, setLoading] = useState(false)
 
-  // Validation schema
   const formSchema = z.object({
     responseStatus: z.string().nonempty({ message: 'You must select a status' })
   })
@@ -42,10 +42,12 @@ export default function ExampleForm({ idResponse }) {
           status: data.responseStatus
         }
       )
-
-      console.log('Réponse mise à jour avec succès:', response.data)
+      if (response.status === 200) {
+        toast.success('Response updated successfully')
+      }
     } catch (error) {
-      console.error('Erreur lors de la mise à jour:', error)
+      console.error('Error Failed to update:', error)
+      toast.error('Failed to update response')
     } finally {
       setLoading(false)
     }
@@ -58,7 +60,6 @@ export default function ExampleForm({ idResponse }) {
         maxWidth: 400,
         backgroundColor: 'white',
         borderRadius: 2,
-        boxShadow: 3,
         padding: 0
       }}
     >
@@ -85,6 +86,7 @@ export default function ExampleForm({ idResponse }) {
                 <MenuItem value='AWAITING FOR REVIEW'>
                   AWAITING FOR REVIEW
                 </MenuItem>
+                <MenuItem value='REVIEWED'>REVIEWED</MenuItem>
                 <MenuItem value='APPROVED'>APPROVED</MenuItem>
                 <MenuItem value='EDITED'>EDITED</MenuItem>
               </Select>

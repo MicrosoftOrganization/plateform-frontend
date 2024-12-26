@@ -4,7 +4,7 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 
 export default function ChatPage({ params }) {
-  const { chatId } = params // Extraire l'ID dynamique depuis l'URL
+  const { chatId } = params 
 
   return (
     <div>

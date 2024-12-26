@@ -27,7 +27,6 @@ export const useResponseStore = create<State & Actions>(set => ({
   fetchResponses: async (MemberId: string) => {
     try {
       const responsesData = await fetchResponses(MemberId)
-      console.log(responsesData)
       set({ responses: responsesData })
     } catch (error) {
       console.error('Erreur lors de la récupération des réponses', error)

@@ -5,9 +5,10 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import { useSearchParams } from 'next/navigation'
 import Empty from '@/mic-component/lottie_animation/Empty'
-import { useSessionsStore } from '@/store/MyStore/SessionsStore'
 import { parse } from 'date-fns'
 import timeGridPlugin from '@fullcalendar/timegrid';
+import axiosInstance from '@/axiosInstance*'
+import Layout from '@/mic-component/Admin_UI/Layout/Layout'
 
 type Session = {
   _id: string
@@ -19,35 +20,31 @@ type Session = {
 }
 
 const Page = () => {
-  const sessions = useSessionsStore((state) => state.sessions)
-  const fetchSessions = useSessionsStore((state) => state.fetchSessions)
+ 
+  const [selectedEvent, setSelectedEvent] = useState<any>(null) 
+  const [sessions, setSessions] = useState([])
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(5)
-  const [selectedEvent, setSelectedEvent] = useState<any>(null) // Stocke les informations de l'événement sélectionné
 
-  const searchParams = useSearchParams()
-  const departmentId = searchParams.get('id_dep')
 
   useEffect(() => {
-    const loadSessions = async (departmentId: string) => {
-      await fetchSessions(departmentId)
+    const loadSessions = async () => {
+        try { 
+            const response = await axiosInstance.get(
+            '/session/all'
+            )
+            setSessions(response.data)
+            
+          } catch (error) {
+            console.error("Erreur lors de l'upload du fichier", error)
+            alert("Erreur lors de l'upload du fichier")
+          }
     }
-    if (departmentId) {
-      loadSessions(departmentId)
-    }
+
+    loadSessions()
    
-  }, [departmentId, fetchSessions])
+  }, [])
 
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentSessions = sessions
-    ? sessions.slice(indexOfFirstItem, indexOfLastItem)
-    : []
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage)
-  }
 
   const handleEventClick = (info: any) => {
     setSelectedEvent(info.event.extendedProps)
@@ -58,19 +55,9 @@ const Page = () => {
   }
 
   return (
-    <Paper
-      sx={{
-        height: '60%',
-        marginTop: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: 2,
-        width: '70%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      {currentSessions && currentSessions.length > 0 ? (
+    <Layout>
+    
+      {sessions.length > 0 ? (
         <Box
           sx={{
             padding: 1,
@@ -90,7 +77,7 @@ const Page = () => {
               left: 'dayGridMonth,timeGridWeek,timeGridDay', 
             }}
             
-            events={currentSessions.map((session) => ({
+            events={sessions.map((session) => ({
               title: session.Title || 'Untitled Session',
               start: parse(
                 session.Date,
@@ -160,7 +147,8 @@ const Page = () => {
           )}
         </Box>
       </Modal>
-    </Paper>
+    
+    </Layout>
   )
 }
 function renderEventContent(eventInfo: any) {

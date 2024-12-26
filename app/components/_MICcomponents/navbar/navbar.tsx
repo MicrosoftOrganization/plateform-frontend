@@ -7,13 +7,13 @@ import { Inter } from 'next/font/google'
 
 import { useAuthStore } from '@/store/MyStore/AuthStore'
 
-
 const inter = Inter({ subsets: ['latin-ext'], weight: '400' })
 
 export default function Navbar() {
   const logout = useAuthStore(state => state.logout)
   const user = useAuthStore(state => state.user) || {}
-  const departmentId = localStorage.getItem('departmentId')
+  const currentDepartment = useAuthStore(state => state.currentDepartment)
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const getUserInitials = () => {
@@ -26,7 +26,7 @@ export default function Navbar() {
   const handleLogOut = async () => {
     try {
       await logout()
-      window.location.href = '/'
+      // window.location.href = '/'
     } catch (error) {
       console.error('Logout failed:', error)
     }
@@ -40,11 +40,11 @@ export default function Navbar() {
           className='flex items-center space-x-3 rtl:space-x-reverse'
         >
           <Image
-            src='/images/main-logo.png' 
+            src='/images/main-logo.png'
             width={37}
             height={37}
             className='object-fit h-8 cursor-pointer object-cover'
-            alt='Microsoft Issatso Logo' 
+            alt='Microsoft Issatso Logo'
           />
           <span
             className={`${inter.className} hidden self-center whitespace-nowrap text-2xl font-semibold md:block`}
@@ -129,8 +129,6 @@ export default function Navbar() {
           id='navbar-user'
         >
           <ul className='mt-4 flex flex-col justify-between rounded-lg border border-gray-100 bg-gray-50 p-4 font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-navbar md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse'>
-           
-            
             <li>
               {user.role === 'member' ? (
                 <Link
@@ -155,7 +153,7 @@ export default function Navbar() {
                 <Link
                   href={
                     user.role === 'member'
-                      ? '/member/sessions'+'?id_dep='+departmentId
+                      ? '/member/sessions' + '?id_dep=' + currentDepartment
                       : '/instructor/sessions'
                   }
                   className='block rounded px-3 py-2 text-black hover:bg-gray-100 dark:text-white md:p-0 md:text-gray-300 md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-primary'
@@ -168,13 +166,25 @@ export default function Navbar() {
               <Link
                 href={
                   user.role === 'member'
-                    ? '/member/assignments/'+'?id_dep='+departmentId
+                    ? '/member/assignments/' + '?id_dep=' + currentDepartment
                     : '/instructor/assignments'
                 }
                 className='block rounded px-3 py-2 text-black hover:bg-gray-100 dark:text-white md:p-0 md:text-gray-300 md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-primary'
               >
                 Assignments
               </Link>
+            </li>
+            <li>
+              {user.role === 'instructor' ? (
+                <Link
+                  href='/instructor/showMembers'
+                  className='block rounded px-3 py-2 text-black hover:bg-gray-100 dark:text-white md:p-0 md:text-gray-300 md:hover:bg-transparent md:hover:text-primary md:dark:hover:text-primary'
+                >
+                  Members
+                </Link>
+              ) : (
+                ''
+              )}
             </li>
             <li>
               {user.role === 'instructor' ? (
