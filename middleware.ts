@@ -24,34 +24,26 @@ export default async function middleware(req: NextRequest) {
   const userRole = isAuth ? await getUserRole(req) : null
   const { pathname } = req.nextUrl
 
-  // console.log('Middleware executed')
-  // console.log('isAuth:', isAuth)
-  // console.log('userRole:', userRole)
-  // console.log('pathname:', pathname)
-
-  // Redirect authenticated users away from the login page
-  // if (isAuth && pathname === '/') {
-  //   return NextResponse.redirect(new URL(`/${userRole}/assignments`, req.nextUrl.origin))
-  // }
-
-  // Redirect unauthorized users to the "Unauthorized" page
+  
   if (isAuth) {
+
     if (protectedRoutes.member.includes(pathname) && userRole !== 'member') {
-      return NextResponse.redirect(new URL('/unauthorized', req.nextUrl.origin))
+      return NextResponse.redirect(new URL('/not-found', req.nextUrl.origin))
     }
     if (
       protectedRoutes.instructor.includes(pathname) &&
       userRole !== 'instructor'
     ) {
-      return NextResponse.redirect(new URL('/unauthorized', req.nextUrl.origin))
+      return NextResponse.redirect(new URL('/not-found', req.nextUrl.origin))
     }
     if (
       protectedRoutes.admin.includes(pathname) &&
       userRole !== 'superAdmin'
     ) {
-      return NextResponse.redirect(new URL('/unauthorized', req.nextUrl.origin))
+      return NextResponse.redirect(new URL('/not-found', req.nextUrl.origin))
     }
   }
+  
   
 
   return NextResponse.next()
