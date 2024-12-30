@@ -10,7 +10,7 @@ import {
   MenuItem,
   SelectChangeEvent
 } from '@mui/material'
-import { toast } from 'react-toastify'
+import  toast  from 'react-hot-toast'
 import { useMemberStore } from '@/store/MyStore/MembersStore'
 import { MemberForAdmin } from '@/store/Models/Member'
 import DepartmentSelect from '../DepartmentSelect/DepartmentSelect'
@@ -98,21 +98,17 @@ const UserForm: React.FC<UserFormProps> = ({
             memberData.Password = form.Password
           }
           await updateMembersForAdmin(form._id, memberData)
-          toast.success('Membre mis à jour avec succès!', {
-            position: 'top-center'
-          })
+          toast.success('Membre mis à jour avec succès!')
         } else {
           await addMembersForAdmin(memberData)
-          toast.success('Membre ajouté avec succès!', {
-            position: 'top-center'
-          })
+          toast.success('Membre ajouté avec succès!')
         }
 
         await fetchMembersForAdmin()
       }
       resetForm()
     } catch (error) {
-      toast.error("Erreur lors de l'opération", { position: 'top-center' })
+      toast.error("Erreur lors de l'opération")
     } finally {
       setLoading(false)
     }
