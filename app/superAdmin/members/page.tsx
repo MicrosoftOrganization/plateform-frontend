@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Grid, Button } from '@mui/material'
 import Layout from '@/mic-component/Admin_UI/Layout/Layout'
 import EnhancedTable from '@/mic-component/Admin_UI/TableComponent/TableComponent'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import UserForm from '@/mic-component/Admin_UI/Form/UserForm'
 import { useEffect, useState } from 'react'
 import { MemberForAdmin } from '@/store/Models/Member'
@@ -68,14 +68,10 @@ const Page: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await deleteMembersForAdmin(id)
-      toast.success('Membre supprimé avec succès', {
-        position: 'bottom-center'
-      })
+      toast.success('Membre supprimé avec succès')
       await fetchMembersForAdmin() // Refresh members after deletion
     } catch (error) {
-      toast.error('Erreur lors de la suppression du membre', {
-        position: 'bottom-center'
-      })
+      toast.error('Erreur lors de la suppression du membre')
     }
   }
 
