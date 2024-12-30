@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogActions
 } from '@mui/material'
-import { toast } from 'react-toastify'
+import toast from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import { useSessionsStore } from '@/app/store/MyStore/SessionsStore'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
