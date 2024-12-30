@@ -6,6 +6,7 @@ import axiosInstance from '@/axiosInstance'
 import { ENDPOINTS } from '@/store/constants/api'
 import { User } from '@/store/Models/User'
 import throttle from 'lodash.throttle'
+import Cookies from 'js-cookie'
 
 type AuthState = {
   user: User | null
@@ -43,8 +44,8 @@ export const useAuthStore = create<AuthState>()(
           } = response.data.user || {} // Récupération des données de l'utilisateur
 
           const token = response.data.token
-
-          axiosInstance.defaults.headers['Authorization'] = `Bearer ${token}`
+          Cookies.set('test', token, { expires: 1 }) 
+         
 
           set({
             user: {
