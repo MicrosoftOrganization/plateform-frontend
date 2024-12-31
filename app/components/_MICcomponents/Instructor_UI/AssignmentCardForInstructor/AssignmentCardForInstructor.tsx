@@ -105,23 +105,24 @@ export default function AssignmentCardForInstructor({
       </div>
 
       {isEditOpen && (
-        <UpdateAssignmentModal
-          isOpen={isEditOpen}
-          onClose={onEditOpenChange}
-          assignmentId={assignment._id}
-          initialTitle={assignment.Title}
-          initialDescription={assignment.Description}
-          initialDate={assignment.DueDate}
-          onConfirm={async (updatedAssignmentData: any) => {
-            try {
-              await updateAssignment(assignment._id, updatedAssignmentData)
-              toast.success('Assignment updated successfully')
-            } catch (error) {
-              toast.error('Failed to update assignment')
-              console.error(error)
-            }
-          }}
-        />
+        <div> update a verifier apres</div>
+        // <UpdateAssignmentModal
+        //   isOpen={isEditOpen}
+        //   onClose={onEditOpenChange}
+        //   assignmentId={assignment._id}
+        //   initialTitle={assignment.Title}
+        //   initialDescription={assignment.Description}
+        //   initialDate={assignment.DueDate}
+        //   onConfirm={async (updatedAssignmentData: any) => {
+        //     try {
+        //       await updateAssignment(assignment._id, updatedAssignmentData)
+        //       toast.success('Assignment updated successfully')
+        //     } catch (error) {
+        //       toast.error('Failed to update assignment')
+        //       console.error(error)
+        //     }
+        //   }}
+        // />
       )}
 
       {isDeleteOpen && (
@@ -139,7 +140,6 @@ export default function AssignmentCardForInstructor({
           }}
         />
       )}
-
     </div>
   )
 }

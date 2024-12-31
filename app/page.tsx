@@ -52,7 +52,7 @@ export default function Login() {
                 We Are Glad That You Are Joining Us!
               </h1>
               <p className='text-lg font-thin'>
-                Together we'll be creating an impact that matters
+                Together we&apos;ll be creating an impact that matters
               </p>
             </div>
           </div>
