@@ -95,7 +95,7 @@ const AjoutInstructor: React.FC<AjoutInstructorProps> = ({
     >
       <div className='w-96 rounded-lg bg-white p-8 shadow-lg'>
         <h2 className='mb-4 text-xl font-bold'>
-          Ajout d'un nouvel instructeur
+          Ajout dun nouvel instructeur
         </h2>
         <form onSubmit={handleSubmit}>
           {/* Instructor Name Input */}
