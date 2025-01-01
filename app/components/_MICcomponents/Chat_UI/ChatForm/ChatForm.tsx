@@ -109,7 +109,7 @@ const CreateConversationForm = () => {
             />
           </div>
 
-          <div style={{ marginBottom: '10px' }}>
+          {/* <div style={{ marginBottom: '10px' }}>
             <FormField
               control={form.control}
               name='Instructor'
@@ -123,7 +123,7 @@ const CreateConversationForm = () => {
                 </FormItem>
               )}
             />
-          </div>
+          </div> */}
 
           <div style={{ marginBottom: '10px' }}>
             <label htmlFor='departmentId'>ID du département :</label>
