@@ -126,19 +126,20 @@ export default function AssignmentCardForInstructor({
       )}
 
       {isDeleteOpen && (
-        <DeleteAssignmentModal
-          isOpen={isDeleteOpen}
-          onClose={onDeleteOpenChange}
-          onConfirm={async () => {
-            try {
-              await deleteAssignment(assignment._id)
-              toast.success('Assignment deleted successfully')
-            } catch (error) {
-              toast.error('Failed to delete assignment')
-              console.error(error)
-            }
-          }}
-        />
+        // <DeleteAssignmentModal
+        //   isOpen={isDeleteOpen}
+        //   onClose={onDeleteOpenChange}
+        //   onConfirm={async () => {
+        //     try {
+        //       await deleteAssignment(assignment._id)
+        //       toast.success('Assignment deleted successfully')
+        //     } catch (error) {
+        //       toast.error('Failed to delete assignment')
+        //       console.error(error)
+        //     }
+        //   }}
+        // />
+        <div> delete a verifier apres</div>
       )}
     </div>
   )
