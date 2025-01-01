@@ -34,7 +34,7 @@ export const useMemberStore = create<State & Actions>()(
       fetchMembersForAdmin: async () => {
         try {
           const data = await fetchMembersForAdmin()
-          set({ membersForAdmin: data })
+          set({ membersForAdmin: data || [] })
         } catch (error) {
           console.error('Error fetching sessions:', error)
         }
