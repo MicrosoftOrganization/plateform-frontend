@@ -6,7 +6,7 @@ const Modal = ({ isOpen, onClose, onConfirm }) => {
   return (
     <div
       id='popup-modal'
-      tabIndex='-1'
+      tabIndex={-1}
       className='fixed left-0 right-0 top-0 z-50 flex h-[calc(100%-1rem)] max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden bg-gray-800 bg-opacity-50 md:inset-0'
     >
       <div className='relative max-h-full w-full max-w-md p-4'>
