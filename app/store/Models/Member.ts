@@ -11,8 +11,8 @@ export type MemberForAdmin = {
   Role: string
   Adresse: string
   ImageLink: string
-  Departement: string
-  
+  DepartmentIds: string[]
+  FormattedDepartmentsIds: string
 }
 export type State = {
   members: Member[]
